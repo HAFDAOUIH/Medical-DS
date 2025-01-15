@@ -1,0 +1,6 @@
+pandas
+tqdm
+python-dateutil
+sqlalchemy
+pymysql
+

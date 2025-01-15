@@ -1,0 +1,47 @@
+2025-01-15 17:21:26,573 - INFO - Starting ETL pipeline with 8 workers
+2025-01-15 17:21:40,354 - INFO - Creating MySQL engine in the main process...
+2025-01-15 17:21:40,450 - INFO - Inserted 983 patient records into MySQL table 'patient'.
+2025-01-15 17:21:41,500 - INFO - Inserted 38450 encounter records into MySQL table 'encounter'.
+2025-01-15 17:21:41,793 - INFO - Inserted 7304 condition records into MySQL table 'condition'.
+2025-01-15 17:21:51,479 - INFO - Inserted 214104 observation records into MySQL table 'observation'.
+2025-01-15 17:21:52,630 - INFO - Inserted 30088 procedure records into MySQL table 'procedure'.
+2025-01-15 17:21:54,423 - INFO - Inserted 49340 claim records into MySQL table 'claim'.
+2025-01-15 17:21:54,580 - INFO - Inserted 2970 careplan records into MySQL table 'careplan'.
+2025-01-15 17:21:54,666 - INFO - Inserted 2970 careteam records into MySQL table 'careteam'.
+2025-01-15 17:21:55,099 - INFO - Inserted 12418 immunization records into MySQL table 'immunization'.
+2025-01-15 17:21:55,475 - INFO - Inserted 10890 medicationrequest records into MySQL table 'medicationrequest'.
+2025-01-15 17:21:55,514 - INFO - Inserted 800 medicationadministration records into MySQL table 'medicationadministration'.
+2025-01-15 17:21:55,537 - INFO - Inserted 471 allergyintolerance records into MySQL table 'allergyintolerance'.
+2025-01-15 17:21:55,553 - INFO - Inserted 49 device records into MySQL table 'device'.
+2025-01-15 17:21:55,828 - INFO - Inserted 15297 diagnosticreport records into MySQL table 'diagnosticreport'.
+2025-01-15 17:21:56,398 - INFO - Inserted 38450 explanationofbenefit records into MySQL table 'explanationofbenefit'.
+2025-01-15 17:21:56,451 - INFO - Inserted 2475 goal records into MySQL table 'goal'.
+2025-01-15 17:21:56,478 - INFO - Inserted 801 imagingstudy records into MySQL table 'imagingstudy'.
+2025-01-15 17:21:56,523 - INFO - Inserted 2483 organization records into MySQL table 'organization'.
+2025-01-15 17:21:56,569 - INFO - Inserted 2484 practitioner records into MySQL table 'practitioner'.
+2025-01-15 17:21:56,569 - INFO - 
+            ETL Pipeline completed:
+            - Duration: 30.00 seconds
+            - Total files processed: 983
+            - Total resources processed: 432,827
+            - Resources by type:
+              - patient: 983 records
+  - encounter: 38,450 records
+  - condition: 7,304 records
+  - observation: 214,104 records
+  - procedure: 30,088 records
+  - claim: 49,340 records
+  - careplan: 2,970 records
+  - careteam: 2,970 records
+  - immunization: 12,418 records
+  - medicationrequest: 10,890 records
+  - medicationadministration: 800 records
+  - allergyintolerance: 471 records
+  - device: 49 records
+  - diagnosticreport: 15,297 records
+  - explanationofbenefit: 38,450 records
+  - goal: 2,475 records
+  - imagingstudy: 801 records
+  - organization: 2,483 records
+  - practitioner: 2,484 records
+            

@@ -1,0 +1,161 @@
+2025-01-15 16:42:12,251 - INFO - Counting resources in original JSON files...
+2025-01-15 16:42:21,281 - INFO - 
+=== ETL Validation Report ===
+
+2025-01-15 16:42:21,281 - INFO - Total processed records: 432827
+2025-01-15 16:42:21,281 - INFO - Total original records: 432827
+2025-01-15 16:42:21,281 - INFO - Overall difference: 0
+
+2025-01-15 16:42:21,281 - INFO - Resource-level Statistics:
+2025-01-15 16:42:21,281 - INFO - 
+ALLERGYINTOLERANCE:
+2025-01-15 16:42:21,281 - INFO -   Processed records: 471
+2025-01-15 16:42:21,281 - INFO -   Original records:  471
+2025-01-15 16:42:21,281 - INFO -   Difference:        0
+2025-01-15 16:42:21,281 - INFO -   Data completeness: 100.00%
+2025-01-15 16:42:21,281 - INFO - 
+CAREPLAN:
+2025-01-15 16:42:21,281 - INFO -   Processed records: 2970
+2025-01-15 16:42:21,281 - INFO -   Original records:  2970
+2025-01-15 16:42:21,281 - INFO -   Difference:        0
+2025-01-15 16:42:21,281 - INFO -   Data completeness: 93.01%
+2025-01-15 16:42:21,281 - INFO -   Fields with missing values:
+2025-01-15 16:42:21,281 - INFO -     - end_date: 1454 (49.0%)
+2025-01-15 16:42:21,281 - INFO - 
+CARETEAM:
+2025-01-15 16:42:21,281 - INFO -   Processed records: 2970
+2025-01-15 16:42:21,281 - INFO -   Original records:  2970
+2025-01-15 16:42:21,281 - INFO -   Difference:        0
+2025-01-15 16:42:21,281 - INFO -   Data completeness: 100.00%
+2025-01-15 16:42:21,281 - INFO - 
+CLAIM:
+2025-01-15 16:42:21,281 - INFO -   Processed records: 49340
+2025-01-15 16:42:21,281 - INFO -   Original records:  49340
+2025-01-15 16:42:21,281 - INFO -   Difference:        0
+2025-01-15 16:42:21,281 - INFO -   Data completeness: 100.00%
+2025-01-15 16:42:21,281 - INFO - 
+CONDITION:
+2025-01-15 16:42:21,282 - INFO -   Processed records: 7304
+2025-01-15 16:42:21,282 - INFO -   Original records:  7304
+2025-01-15 16:42:21,282 - INFO -   Difference:        0
+2025-01-15 16:42:21,282 - INFO -   Data completeness: 93.22%
+2025-01-15 16:42:21,282 - INFO -   Fields with missing values:
+2025-01-15 16:42:21,282 - INFO -     - abatement_datetime: 3469 (47.5%)
+2025-01-15 16:42:21,282 - INFO - 
+DEVICE:
+2025-01-15 16:42:21,282 - INFO -   Processed records: 49
+2025-01-15 16:42:21,282 - INFO -   Original records:  49
+2025-01-15 16:42:21,282 - INFO -   Difference:        0
+2025-01-15 16:42:21,282 - INFO -   Data completeness: 100.00%
+2025-01-15 16:42:21,282 - INFO - 
+DIAGNOSTICREPORT:
+2025-01-15 16:42:21,282 - INFO -   Processed records: 15297
+2025-01-15 16:42:21,282 - INFO -   Original records:  15297
+2025-01-15 16:42:21,282 - INFO -   Difference:        0
+2025-01-15 16:42:21,282 - INFO -   Data completeness: 100.00%
+2025-01-15 16:42:21,282 - INFO - 
+ENCOUNTER:
+2025-01-15 16:42:21,282 - INFO -   Processed records: 38450
+2025-01-15 16:42:21,282 - INFO -   Original records:  38450
+2025-01-15 16:42:21,282 - INFO -   Difference:        0
+2025-01-15 16:42:21,282 - INFO -   Data completeness: 100.00%
+2025-01-15 16:42:21,282 - INFO - 
+EXPLANATIONOFBENEFIT:
+2025-01-15 16:42:21,282 - INFO -   Processed records: 38450
+2025-01-15 16:42:21,282 - INFO -   Original records:  38450
+2025-01-15 16:42:21,282 - INFO -   Difference:        0
+2025-01-15 16:42:21,282 - INFO -   Data completeness: 100.00%
+2025-01-15 16:42:21,282 - INFO - 
+GOAL:
+2025-01-15 16:42:21,282 - INFO -   Processed records: 2475
+2025-01-15 16:42:21,282 - INFO -   Original records:  2475
+2025-01-15 16:42:21,282 - INFO -   Difference:        0
+2025-01-15 16:42:21,282 - INFO -   Data completeness: 100.00%
+2025-01-15 16:42:21,282 - INFO - 
+IMAGINGSTUDY:
+2025-01-15 16:42:21,282 - INFO -   Processed records: 801
+2025-01-15 16:42:21,282 - INFO -   Original records:  801
+2025-01-15 16:42:21,282 - INFO -   Difference:        0
+2025-01-15 16:42:21,282 - INFO -   Data completeness: 100.00%
+2025-01-15 16:42:21,282 - INFO - 
+IMMUNIZATION:
+2025-01-15 16:42:21,282 - INFO -   Processed records: 12418
+2025-01-15 16:42:21,282 - INFO -   Original records:  12418
+2025-01-15 16:42:21,282 - INFO -   Difference:        0
+2025-01-15 16:42:21,282 - INFO -   Data completeness: 100.00%
+2025-01-15 16:42:21,282 - INFO - 
+MEDICATIONADMINISTRATION:
+2025-01-15 16:42:21,282 - INFO -   Processed records: 800
+2025-01-15 16:42:21,282 - INFO -   Original records:  800
+2025-01-15 16:42:21,282 - INFO -   Difference:        0
+2025-01-15 16:42:21,282 - INFO -   Data completeness: 100.00%
+2025-01-15 16:42:21,282 - INFO - 
+MEDICATIONREQUEST:
+2025-01-15 16:42:21,282 - INFO -   Processed records: 10890
+2025-01-15 16:42:21,283 - INFO -   Original records:  10890
+2025-01-15 16:42:21,283 - INFO -   Difference:        0
+2025-01-15 16:42:21,283 - INFO -   Data completeness: 100.00%
+2025-01-15 16:42:21,283 - INFO - 
+OBSERVATION:
+2025-01-15 16:42:21,283 - INFO -   Processed records: 214104
+2025-01-15 16:42:21,283 - INFO -   Original records:  214104
+2025-01-15 16:42:21,283 - INFO -   Difference:        0
+2025-01-15 16:42:21,283 - INFO -   Data completeness: 95.39%
+2025-01-15 16:42:21,283 - INFO -   Fields with missing values:
+2025-01-15 16:42:21,283 - INFO -     - value_quantity: 29615 (13.8%)
+2025-01-15 16:42:21,283 - INFO -     - value_unit: 29615 (13.8%)
+2025-01-15 16:42:21,283 - INFO -     - value_code: 29615 (13.8%)
+2025-01-15 16:42:21,283 - INFO - 
+ORGANIZATION:
+2025-01-15 16:42:21,283 - INFO -   Processed records: 2483
+2025-01-15 16:42:21,283 - INFO -   Original records:  2483
+2025-01-15 16:42:21,283 - INFO -   Difference:        0
+2025-01-15 16:42:21,283 - INFO -   Data completeness: 100.00%
+2025-01-15 16:42:21,283 - INFO - 
+PATIENT:
+2025-01-15 16:42:21,283 - INFO -   Processed records: 983
+2025-01-15 16:42:21,283 - INFO -   Original records:  983
+2025-01-15 16:42:21,283 - INFO -   Difference:        0
+2025-01-15 16:42:21,283 - INFO -   Data completeness: 85.91%
+2025-01-15 16:42:21,283 - INFO -   Fields with missing values:
+2025-01-15 16:42:21,283 - INFO -     - deceased_datetime: 831 (84.5%)
+2025-01-15 16:42:21,283 - INFO - 
+PRACTITIONER:
+2025-01-15 16:42:21,283 - INFO -   Processed records: 2484
+2025-01-15 16:42:21,283 - INFO -   Original records:  2484
+2025-01-15 16:42:21,283 - INFO -   Difference:        0
+2025-01-15 16:42:21,283 - INFO -   Data completeness: 100.00%
+2025-01-15 16:42:21,283 - INFO - 
+PROCEDURE:
+2025-01-15 16:42:21,283 - INFO -   Processed records: 30088
+2025-01-15 16:42:21,283 - INFO -   Original records:  30088
+2025-01-15 16:42:21,283 - INFO -   Difference:        0
+2025-01-15 16:42:21,283 - INFO -   Data completeness: 100.00%
+2025-01-15 16:42:21,335 - INFO - 
+Validating 5 sample encounter records:
+
+2025-01-15 16:42:21,335 - INFO - Encounter ID: b1b6548d-1ee7-4fd2-a17e-de54c576198c
+2025-01-15 16:42:21,335 - INFO -   Start Date: 2017-07-23T17:44:07-04:00
+2025-01-15 16:42:21,335 - INFO -   End Date:   2017-07-23T17:59:07-04:00
+2025-01-15 16:42:21,335 - INFO -   Status:     finished
+2025-01-15 16:42:21,335 - INFO - 
+2025-01-15 16:42:21,336 - INFO - Encounter ID: c4482c04-19e7-4c1b-9eda-3878c06ce7c7
+2025-01-15 16:42:21,336 - INFO -   Start Date: 2019-02-26T17:22:32-05:00
+2025-01-15 16:42:21,336 - INFO -   End Date:   2019-02-26T17:51:32-05:00
+2025-01-15 16:42:21,336 - INFO -   Status:     finished
+2025-01-15 16:42:21,336 - INFO - 
+2025-01-15 16:42:21,336 - INFO - Encounter ID: e7902429-4975-4329-aade-537872589f97
+2025-01-15 16:42:21,336 - INFO -   Start Date: 2018-12-23T20:27:53-05:00
+2025-01-15 16:42:21,336 - INFO -   End Date:   2018-12-23T20:42:53-05:00
+2025-01-15 16:42:21,336 - INFO -   Status:     finished
+2025-01-15 16:42:21,336 - INFO - 
+2025-01-15 16:42:21,336 - INFO - Encounter ID: 3e2a72ba-5f6b-432a-951f-56346ab23f03
+2025-01-15 16:42:21,336 - INFO -   Start Date: 1988-02-09T23:06:10-05:00
+2025-01-15 16:42:21,336 - INFO -   End Date:   1988-02-09T23:21:10-05:00
+2025-01-15 16:42:21,336 - INFO -   Status:     finished
+2025-01-15 16:42:21,336 - INFO - 
+2025-01-15 16:42:21,337 - INFO - Encounter ID: 674c46c4-0ab3-44be-97ac-7cd0ee77dfce
+2025-01-15 16:42:21,337 - INFO -   Start Date: 1991-08-25T03:16:14-04:00
+2025-01-15 16:42:21,337 - INFO -   End Date:   1991-08-25T03:31:14-04:00
+2025-01-15 16:42:21,337 - INFO -   Status:     finished
+2025-01-15 16:42:21,337 - INFO - 
