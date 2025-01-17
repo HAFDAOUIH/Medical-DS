@@ -1,20 +1,25 @@
-import os
 from flask import Flask, request, jsonify
 from werkzeug.utils import secure_filename
 from pathlib import Path
+import os
+import shutil
 from healthcare_etl import HealthcareETL
 
 app = Flask(__name__)
 
 # Configuration
 app.config['UPLOAD_FOLDER'] = './uploads'
+app.config['TMP_FOLDER'] = './tmp'
 app.config['ALLOWED_EXTENSIONS'] = {'json', 'xml', 'csv'}
 
-# Ensure the upload folder exists
+# Ensure the upload and tmp folders exist
 os.makedirs(app.config['UPLOAD_FOLDER'], exist_ok=True)
+os.makedirs(app.config['TMP_FOLDER'], exist_ok=True)
+
 
 def allowed_file(filename):
     return '.' in filename and filename.rsplit('.', 1)[1].lower() in app.config['ALLOWED_EXTENSIONS']
+
 
 @app.route('/upload', methods=['POST'])
 def upload_files():
@@ -25,19 +30,23 @@ def upload_files():
 
     uploaded_files = request.files.getlist('files')
     folder_path = request.form.get('folder')
-    print('uploaded_files',  uploaded_files)
-    print('folder_path : ', folder_path)
+    mysql_url = request.form.get('mysql_url')
 
-    saved_files = []
+    if not mysql_url:
+        return jsonify({"error": "MySQL URL not provided."}), 400
+
+    tmp_folder = Path(app.config['TMP_FOLDER']) / 'etl_tmp'
+    if tmp_folder.exists():
+        shutil.rmtree(tmp_folder)
+    os.makedirs(tmp_folder, exist_ok=True)
 
     # Process uploaded files
     if uploaded_files:
         for file in uploaded_files:
             if file and allowed_file(file.filename):
                 filename = secure_filename(file.filename)
-                file_path = os.path.join(app.config['UPLOAD_FOLDER'], filename)
+                file_path = tmp_folder / filename
                 file.save(file_path)
-                saved_files.append(file_path)
             else:
                 return jsonify({"error": f"Unsupported file type for file: {file.filename}. Allowed types: {', '.join(app.config['ALLOWED_EXTENSIONS'])}"}), 400
 
@@ -48,20 +57,23 @@ def upload_files():
             return jsonify({"error": f"Invalid folder path: {folder_path}"}), 400
         for file in folder.glob("**/*"):
             if file.is_file() and allowed_file(file.name):
-                saved_files.append(str(file))
+                shutil.copy(file, tmp_folder / file.name)
 
-    if not saved_files:
+    # Ensure there are files to process
+    if not any(tmp_folder.iterdir()):
         return jsonify({"error": "No valid files found to process."}), 400
 
-    # Run ETL on all saved files
+    # Run ETL on the tmp folder
     try:
-        etl = HealthcareETL(Path(app.config['UPLOAD_FOLDER']))
-        mysql_url = os.getenv('MYSQL_URL', 'mysql+pymysql://user:pass@localhost/healthcare_db')
-        etl.run_pipeline(mysql_url, files=saved_files)
+        etl = HealthcareETL(tmp_folder)
+        etl.run_pipeline(mysql_url)
     except Exception as e:
         return jsonify({"error": str(e)}), 500
+    finally:
+        # Clean up tmp folder
+        shutil.rmtree(tmp_folder, ignore_errors=True)
 
-    return jsonify({"message": "Files processed successfully.", "processed_files": saved_files}), 200
+    return jsonify({"message": "Files processed successfully."}), 200
 
 
 @app.route('/emr/<string:patient_id>', methods=['GET'])
@@ -79,6 +91,7 @@ def get_patient_emr(patient_id):
         return jsonify(patient_data), 200
     except Exception as e:
         return jsonify({"error": str(e)}), 500
+
 
 if __name__ == '__main__':
     app.run(debug=True)

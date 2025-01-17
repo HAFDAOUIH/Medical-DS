@@ -1,6 +1,7 @@
 pandas
+Flask
 tqdm
 python-dateutil
 sqlalchemy
 pymysql
-
+Werkzeug
