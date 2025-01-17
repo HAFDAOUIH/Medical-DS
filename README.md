@@ -138,6 +138,90 @@ SHOW TABLES;
 
 When you run the ETL, it will automatically create tables named after each FHIR resource (e.g., patient, encounter, observation) and insert the data.
 
+## Test the API : 
+
+### API Description
+
+This API provides endpoints to upload files for ETL (Extract, Transform, Load) processing and retrieve Electronic Medical Records (EMR) data for a specific patient.
+
+#### Endpoints:
+
+1. **POST /upload**:
+   - This endpoint allows the user to upload files or a folder for ETL processing.
+   - **Parameters**:
+     - `files`: A list of files (JSON, XML, CSV) to be uploaded.
+     - `folder`: (Optional) A folder containing files to be uploaded.
+     - `mysql_url`: The MySQL connection URL for storing the processed data (required).
+   - **Process**:
+     - The API processes the uploaded files or the files within the provided folder, applies the ETL pipeline, and stores the results in the specified MySQL database (`healthcare_db`).
+     - Valid file types include JSON, XML, and CSV.
+   - **Response**:
+     - Returns a success message if the files are processed successfully.
+     - Returns an error message if no valid files are found, if the folder path is invalid, or if there is any issue during the ETL process.
+
+2. **GET /emr/<patient_id>**:
+   - This endpoint retrieves a patient's EMR data from the MySQL database.
+   - **Parameters**:
+     - `patient_id`: The unique identifier for the patient whose EMR data is to be retrieved.
+     - `mysql_url`: The MySQL connection URL to connect to the database (required).
+   - **Process**:
+     - The API fetches the patient's data from the `patient` table in the `healthcare_db` MySQL database based on the provided `patient_id`.
+     - Returns the patient's information if found.
+     - If the patient is not found, an error message is returned.
+   - **Response**:
+     - A JSON object containing the patient's EMR data if found.
+     - An error message if the patient is not found or if there are issues with the database connection.
+
+#### Run the API :
+
+navigate to bbackend folder first, then run this cmd in the terminal :
+
+```bash
+python3 api.py
+```
+
+#### Example Usage:
+
+Open other Terminal and test the API :
+
+** Warning: ** you must specify a database to store the files
+
+**Upload Files**:
+
+1. Upload a folder for ETL processing:
+   ```bash
+   curl -X POST http://127.0.0.1:5000/upload -F "folder=test_folder" -F "mysql_url=mysql+pymysql://root@localhost:3306/healthcare_db"
+   ```
+
+2. Upload multiple files for ETL processing:
+   ```bash
+   curl -X POST http://127.0.0.1:5000/upload -F "files=@Ross213_Bayer639_d084de98-b1f8-4b37-a91a-e6c5cc3e5d20.json" -F"files=@Sina65_Wolff180_582b89e2-30d8-44fb-bb96-03957b2ec7c2.json" -F "mysql_url=mysql+pymysql://root@localhost:3306/healthcare_db"
+   ```
+
+**Get Patient EMR**:
+
+1. Retrieve a patient's EMR data:
+   ```bash
+   curl -X GET "http://127.0.0.1:5000/emr/eac150b8-3c32-4a24-b5da-e39d7dee588e?mysql_url=mysql+pymysql://root@localhost:3306/healthcare_db"
+   ```
+
+#### Configuration:
+
+- **Upload Folder**: Files are stored temporarily in `./uploads` before processing.
+- **Temporary Folder**: `./tmp` folder is used for storing files during ETL processing.
+- **Allowed Extensions**: The API accepts `.json`, `.xml`, and `.csv` files for processing.
+
+#### Error Handling:
+
+- The API returns appropriate error messages for:
+  - Missing `mysql_url`.
+  - Unsupported file types.
+  - Invalid folder paths.
+  - Database connection issues.
+  - No valid files found for processing.
+
+This API helps automate the ETL process for healthcare data and facilitates the retrieval of medical records for specific patients stored in a MySQL database.
+
 ## Troubleshooting
 
 - **No module named 'pymysql'**:
