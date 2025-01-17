@@ -3,6 +3,7 @@ from werkzeug.utils import secure_filename
 from pathlib import Path
 import os
 import shutil
+import pymysql
 from healthcare_etl import HealthcareETL
 
 app = Flask(__name__)
@@ -79,18 +80,47 @@ def upload_files():
 @app.route('/emr/<string:patient_id>', methods=['GET'])
 def get_patient_emr(patient_id):
     """Endpoint for retrieving a patient's EMR from the database."""
-    try:
-        # Connect to the database and retrieve patient data
-        mysql_url = os.getenv('MYSQL_URL', 'mysql+pymysql://user:pass@localhost/healthcare_db')
-        etl = HealthcareETL()
-        patient_data = etl.get_patient_emr(mysql_url, patient_id)
+    mysql_url = request.args.get('mysql_url')
 
-        if not patient_data:
-            return jsonify({"error": "Patient not found."}), 404
+    if not mysql_url:
+        return jsonify({"error": "MySQL URL must be provided as a query parameter."}), 400
+
+    connection = None
+    try:
+        # Parse the database URL to extract connection details
+        url_parts = mysql_url.split('@')
+        user_pass = url_parts[0].split('//')[1]  # Extract user and password part
+        user = user_pass.split(':')[0]  # Username
+        # password = user_pass.split(':')[1] if len(user_pass.split(':')) > 1 else ''  # Password (empty if not provided)
+        
+        # host = url_parts[1].split('/')[0]  # Extract host part
+        db = url_parts[1].split('/')[-1]  # Extract database name
+        
+        # Connect to the database
+        connection = pymysql.connect(
+            host='127.0.0.1',
+            user=user,
+            # password=password,
+            password='',
+            database=db,
+        )
+
+        with connection.cursor(pymysql.cursors.DictCursor) as cursor:
+            # Query patient data
+            cursor.execute("SELECT * FROM patient WHERE id = %s", (patient_id,))
+            patient_data = cursor.fetchone()
+
+            if not patient_data:
+                return jsonify({"error": "Patient not found."}), 404
 
         return jsonify(patient_data), 200
+
     except Exception as e:
         return jsonify({"error": str(e)}), 500
+
+    finally:
+        if connection:
+            connection.close()
 
 
 if __name__ == '__main__':
