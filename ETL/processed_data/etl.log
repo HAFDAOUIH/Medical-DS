@@ -1,0 +1,46 @@
+2025-01-15 16:41:49,721 - INFO - Starting ETL pipeline with 8 workers
+2025-01-15 16:42:01,244 - INFO - Saved 983 patient records to processed_data/patient.csv
+2025-01-15 16:42:01,383 - INFO - Saved 38450 encounter records to processed_data/encounter.csv
+2025-01-15 16:42:01,414 - INFO - Saved 7304 condition records to processed_data/condition.csv
+2025-01-15 16:42:02,915 - INFO - Saved 214104 observation records to processed_data/observation.csv
+2025-01-15 16:42:03,112 - INFO - Saved 30088 procedure records to processed_data/procedure.csv
+2025-01-15 16:42:03,362 - INFO - Saved 49340 claim records to processed_data/claim.csv
+2025-01-15 16:42:03,379 - INFO - Saved 2970 careplan records to processed_data/careplan.csv
+2025-01-15 16:42:03,385 - INFO - Saved 2970 careteam records to processed_data/careteam.csv
+2025-01-15 16:42:03,422 - INFO - Saved 12418 immunization records to processed_data/immunization.csv
+2025-01-15 16:42:03,466 - INFO - Saved 10890 medicationrequest records to processed_data/medicationrequest.csv
+2025-01-15 16:42:03,470 - INFO - Saved 800 medicationadministration records to processed_data/medicationadministration.csv
+2025-01-15 16:42:03,471 - INFO - Saved 471 allergyintolerance records to processed_data/allergyintolerance.csv
+2025-01-15 16:42:03,472 - INFO - Saved 49 device records to processed_data/device.csv
+2025-01-15 16:42:03,491 - INFO - Saved 15297 diagnosticreport records to processed_data/diagnosticreport.csv
+2025-01-15 16:42:03,542 - INFO - Saved 38450 explanationofbenefit records to processed_data/explanationofbenefit.csv
+2025-01-15 16:42:03,546 - INFO - Saved 2475 goal records to processed_data/goal.csv
+2025-01-15 16:42:03,548 - INFO - Saved 801 imagingstudy records to processed_data/imagingstudy.csv
+2025-01-15 16:42:03,551 - INFO - Saved 2483 organization records to processed_data/organization.csv
+2025-01-15 16:42:03,555 - INFO - Saved 2484 practitioner records to processed_data/practitioner.csv
+2025-01-15 16:42:03,555 - INFO - 
+            ETL Pipeline completed:
+            - Duration: 13.83 seconds
+            - Total files processed: 983
+            - Total resources processed: 432,827
+            - Resources by type:
+              - patient: 983 records
+  - encounter: 38,450 records
+  - condition: 7,304 records
+  - observation: 214,104 records
+  - procedure: 30,088 records
+  - claim: 49,340 records
+  - careplan: 2,970 records
+  - careteam: 2,970 records
+  - immunization: 12,418 records
+  - medicationrequest: 10,890 records
+  - medicationadministration: 800 records
+  - allergyintolerance: 471 records
+  - device: 49 records
+  - diagnosticreport: 15,297 records
+  - explanationofbenefit: 38,450 records
+  - goal: 2,475 records
+  - imagingstudy: 801 records
+  - organization: 2,483 records
+  - practitioner: 2,484 records
+            

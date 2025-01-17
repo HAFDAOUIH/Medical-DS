@@ -1,0 +1,63 @@
+2025-01-17 14:46:04,478 - INFO - Starting ETL pipeline with 8 workers
+2025-01-17 14:46:07,469 - INFO - Creating MySQL engine in the main process...
+2025-01-17 14:46:07,563 - ERROR - Error inserting patient into MySQL: (pymysql.err.OperationalError) (1045, "Access denied for user 'username'@'localhost' (using password: YES)")
+(Background on this error at: https://sqlalche.me/e/20/e3q8)
+2025-01-17 14:46:07,567 - ERROR - Error inserting encounter into MySQL: (pymysql.err.OperationalError) (1045, "Access denied for user 'username'@'localhost' (using password: YES)")
+(Background on this error at: https://sqlalche.me/e/20/e3q8)
+2025-01-17 14:46:07,588 - ERROR - Error inserting condition into MySQL: (pymysql.err.OperationalError) (1045, "Access denied for user 'username'@'localhost' (using password: YES)")
+(Background on this error at: https://sqlalche.me/e/20/e3q8)
+2025-01-17 14:46:07,604 - ERROR - Error inserting observation into MySQL: (pymysql.err.OperationalError) (1045, "Access denied for user 'username'@'localhost' (using password: YES)")
+(Background on this error at: https://sqlalche.me/e/20/e3q8)
+2025-01-17 14:46:07,620 - ERROR - Error inserting procedure into MySQL: (pymysql.err.OperationalError) (1045, "Access denied for user 'username'@'localhost' (using password: YES)")
+(Background on this error at: https://sqlalche.me/e/20/e3q8)
+2025-01-17 14:46:07,636 - ERROR - Error inserting claim into MySQL: (pymysql.err.OperationalError) (1045, "Access denied for user 'username'@'localhost' (using password: YES)")
+(Background on this error at: https://sqlalche.me/e/20/e3q8)
+2025-01-17 14:46:07,652 - ERROR - Error inserting careplan into MySQL: (pymysql.err.OperationalError) (1045, "Access denied for user 'username'@'localhost' (using password: YES)")
+(Background on this error at: https://sqlalche.me/e/20/e3q8)
+2025-01-17 14:46:07,668 - ERROR - Error inserting careteam into MySQL: (pymysql.err.OperationalError) (1045, "Access denied for user 'username'@'localhost' (using password: YES)")
+(Background on this error at: https://sqlalche.me/e/20/e3q8)
+2025-01-17 14:46:07,684 - ERROR - Error inserting immunization into MySQL: (pymysql.err.OperationalError) (1045, "Access denied for user 'username'@'localhost' (using password: YES)")
+(Background on this error at: https://sqlalche.me/e/20/e3q8)
+2025-01-17 14:46:07,687 - ERROR - Error inserting medicationrequest into MySQL: (pymysql.err.OperationalError) (1045, "Access denied for user 'username'@'localhost' (using password: YES)")
+(Background on this error at: https://sqlalche.me/e/20/e3q8)
+2025-01-17 14:46:07,690 - ERROR - Error inserting allergyintolerance into MySQL: (pymysql.err.OperationalError) (1045, "Access denied for user 'username'@'localhost' (using password: YES)")
+(Background on this error at: https://sqlalche.me/e/20/e3q8)
+2025-01-17 14:46:07,693 - ERROR - Error inserting device into MySQL: (pymysql.err.OperationalError) (1045, "Access denied for user 'username'@'localhost' (using password: YES)")
+(Background on this error at: https://sqlalche.me/e/20/e3q8)
+2025-01-17 14:46:07,696 - ERROR - Error inserting diagnosticreport into MySQL: (pymysql.err.OperationalError) (1045, "Access denied for user 'username'@'localhost' (using password: YES)")
+(Background on this error at: https://sqlalche.me/e/20/e3q8)
+2025-01-17 14:46:07,698 - ERROR - Error inserting explanationofbenefit into MySQL: (pymysql.err.OperationalError) (1045, "Access denied for user 'username'@'localhost' (using password: YES)")
+(Background on this error at: https://sqlalche.me/e/20/e3q8)
+2025-01-17 14:46:07,703 - ERROR - Error inserting goal into MySQL: (pymysql.err.OperationalError) (1045, "Access denied for user 'username'@'localhost' (using password: YES)")
+(Background on this error at: https://sqlalche.me/e/20/e3q8)
+2025-01-17 14:46:07,706 - ERROR - Error inserting imagingstudy into MySQL: (pymysql.err.OperationalError) (1045, "Access denied for user 'username'@'localhost' (using password: YES)")
+(Background on this error at: https://sqlalche.me/e/20/e3q8)
+2025-01-17 14:46:07,732 - ERROR - Error inserting organization into MySQL: (pymysql.err.OperationalError) (1045, "Access denied for user 'username'@'localhost' (using password: YES)")
+(Background on this error at: https://sqlalche.me/e/20/e3q8)
+2025-01-17 14:46:07,747 - ERROR - Error inserting practitioner into MySQL: (pymysql.err.OperationalError) (1045, "Access denied for user 'username'@'localhost' (using password: YES)")
+(Background on this error at: https://sqlalche.me/e/20/e3q8)
+2025-01-17 14:46:07,747 - INFO - 
+            ETL Pipeline completed:
+            - Duration: 3.27 seconds
+            - Total files processed: 11
+            - Total resources processed: 2,513
+            - Resources by type:
+              - patient: 11 records
+  - encounter: 244 records
+  - condition: 54 records
+  - observation: 1,229 records
+  - procedure: 63 records
+  - claim: 293 records
+  - careplan: 19 records
+  - careteam: 19 records
+  - immunization: 143 records
+  - medicationrequest: 49 records
+  - allergyintolerance: 6 records
+  - device: 1 records
+  - diagnosticreport: 69 records
+  - explanationofbenefit: 244 records
+  - goal: 16 records
+  - imagingstudy: 1 records
+  - organization: 26 records
+  - practitioner: 26 records
+            
