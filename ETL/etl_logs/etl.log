@@ -1,35 +1,63 @@
-2025-01-15 17:21:26,573 - INFO - Starting ETL pipeline with 8 workers
-2025-01-15 17:21:40,354 - INFO - Creating MySQL engine in the main process...
-2025-01-15 17:21:40,450 - INFO - Inserted 983 patient records into MySQL table 'patient'.
-2025-01-15 17:21:41,500 - INFO - Inserted 38450 encounter records into MySQL table 'encounter'.
-2025-01-15 17:21:41,793 - INFO - Inserted 7304 condition records into MySQL table 'condition'.
-2025-01-15 17:21:51,479 - INFO - Inserted 214104 observation records into MySQL table 'observation'.
-2025-01-15 17:21:52,630 - INFO - Inserted 30088 procedure records into MySQL table 'procedure'.
-2025-01-15 17:21:54,423 - INFO - Inserted 49340 claim records into MySQL table 'claim'.
-2025-01-15 17:21:54,580 - INFO - Inserted 2970 careplan records into MySQL table 'careplan'.
-2025-01-15 17:21:54,666 - INFO - Inserted 2970 careteam records into MySQL table 'careteam'.
-2025-01-15 17:21:55,099 - INFO - Inserted 12418 immunization records into MySQL table 'immunization'.
-2025-01-15 17:21:55,475 - INFO - Inserted 10890 medicationrequest records into MySQL table 'medicationrequest'.
-2025-01-15 17:21:55,514 - INFO - Inserted 800 medicationadministration records into MySQL table 'medicationadministration'.
-2025-01-15 17:21:55,537 - INFO - Inserted 471 allergyintolerance records into MySQL table 'allergyintolerance'.
-2025-01-15 17:21:55,553 - INFO - Inserted 49 device records into MySQL table 'device'.
-2025-01-15 17:21:55,828 - INFO - Inserted 15297 diagnosticreport records into MySQL table 'diagnosticreport'.
-2025-01-15 17:21:56,398 - INFO - Inserted 38450 explanationofbenefit records into MySQL table 'explanationofbenefit'.
-2025-01-15 17:21:56,451 - INFO - Inserted 2475 goal records into MySQL table 'goal'.
-2025-01-15 17:21:56,478 - INFO - Inserted 801 imagingstudy records into MySQL table 'imagingstudy'.
-2025-01-15 17:21:56,523 - INFO - Inserted 2483 organization records into MySQL table 'organization'.
-2025-01-15 17:21:56,569 - INFO - Inserted 2484 practitioner records into MySQL table 'practitioner'.
-2025-01-15 17:21:56,569 - INFO - 
+2025-01-18 23:41:00,815 - INFO - Starting ETL pipeline with 8 workers
+2025-01-18 23:41:12,634 - INFO - Creating MySQL engine in the main process...
+2025-01-18 23:41:12,701 - INFO - Engine created and connected.
+2025-01-18 23:41:12,701 - INFO - Creating tables with relationships...
+2025-01-18 23:41:12,706 - INFO - Dropping existing tables...
+2025-01-18 23:41:12,723 - INFO - Creating new tables with relationships...
+2025-01-18 23:41:13,026 - INFO - Loading patient data...
+2025-01-18 23:41:13,026 - INFO - Loading 983 patient records.
+2025-01-18 23:41:13,164 - INFO - Successfully inserted 983 patient records
+2025-01-18 23:41:13,168 - INFO - patient: Attempted=983, Loaded=983
+2025-01-18 23:41:13,168 - INFO - Loading encounter data...
+2025-01-18 23:41:13,253 - INFO - Filtered encounter records: 38450 -> 38450
+2025-01-18 23:41:16,024 - INFO - Successfully inserted 38450 encounter records
+2025-01-18 23:41:16,032 - INFO - encounter: Attempted=38450, Loaded=38450
+2025-01-18 23:41:16,032 - INFO - Loading medical_observation data...
+2025-01-18 23:41:16,792 - INFO - Filtered medical_observation records: 214104 -> 214104
+2025-01-18 23:41:17,021 - INFO - Filtered medical_observation records: 214104 -> 214104
+2025-01-18 23:41:47,485 - INFO - Successfully inserted 214104 medical_observation records
+2025-01-18 23:41:47,590 - INFO - medical_observation: Attempted=214104, Loaded=214104
+2025-01-18 23:41:47,591 - INFO - Loading medical_condition data...
+2025-01-18 23:41:47,615 - INFO - Filtered medical_condition records: 7304 -> 7304
+2025-01-18 23:41:48,430 - INFO - Successfully inserted 7304 medical_condition records
+2025-01-18 23:41:48,433 - INFO - medical_condition: Attempted=7304, Loaded=7304
+2025-01-18 23:41:48,433 - INFO - Loading medical_procedure data...
+2025-01-18 23:41:48,542 - INFO - Filtered medical_procedure records: 30088 -> 30088
+2025-01-18 23:41:48,758 - INFO - Filtered medical_procedure records: 30088 -> 30088
+2025-01-18 23:41:52,062 - INFO - Successfully inserted 30088 medical_procedure records
+2025-01-18 23:41:52,073 - INFO - medical_procedure: Attempted=30088, Loaded=30088
+2025-01-18 23:41:52,073 - INFO - Loading careplan data...
+2025-01-18 23:41:52,086 - INFO - Filtered careplan records: 2970 -> 2970
+2025-01-18 23:41:52,441 - INFO - Successfully inserted 2970 careplan records
+2025-01-18 23:41:52,443 - INFO - careplan: Attempted=2970, Loaded=2970
+2025-01-18 23:41:52,443 - INFO - Loading careteam data...
+2025-01-18 23:41:52,456 - INFO - Filtered careteam records: 2970 -> 2970
+2025-01-18 23:41:52,626 - INFO - Successfully inserted 2970 careteam records
+2025-01-18 23:41:52,628 - INFO - careteam: Attempted=2970, Loaded=2970
+2025-01-18 23:41:52,628 - INFO - Loading immunization data...
+2025-01-18 23:41:52,660 - INFO - Filtered immunization records: 12418 -> 12418
+2025-01-18 23:41:53,832 - INFO - Successfully inserted 12418 immunization records
+2025-01-18 23:41:53,836 - INFO - immunization: Attempted=12418, Loaded=12418
+2025-01-18 23:41:53,836 - INFO - Loading medicationrequest data...
+2025-01-18 23:41:53,878 - INFO - Filtered medicationrequest records: 10890 -> 10890
+2025-01-18 23:41:54,100 - INFO - Filtered medicationrequest records: 10890 -> 10890
+2025-01-18 23:41:55,271 - INFO - Successfully inserted 10890 medicationrequest records
+2025-01-18 23:41:55,277 - INFO - medicationrequest: Attempted=10890, Loaded=10890
+2025-01-18 23:41:55,277 - INFO - Loading medicationadministration data...
+2025-01-18 23:41:55,285 - INFO - Filtered medicationadministration records: 800 -> 800
+2025-01-18 23:41:55,357 - INFO - Successfully inserted 800 medicationadministration records
+2025-01-18 23:41:55,359 - INFO - medicationadministration: Attempted=800, Loaded=800
+2025-01-18 23:41:55,359 - INFO - 
             ETL Pipeline completed:
-            - Duration: 30.00 seconds
+            - Duration: 54.54 seconds
             - Total files processed: 983
             - Total resources processed: 432,827
             - Resources by type:
               - patient: 983 records
   - encounter: 38,450 records
-  - condition: 7,304 records
-  - observation: 214,104 records
-  - procedure: 30,088 records
+  - medical_condition: 7,304 records
+  - medical_observation: 214,104 records
+  - medical_procedure: 30,088 records
   - claim: 49,340 records
   - careplan: 2,970 records
   - careteam: 2,970 records
