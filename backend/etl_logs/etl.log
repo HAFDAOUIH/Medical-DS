@@ -1,39 +1,45 @@
-2025-01-17 16:05:23,186 - INFO - Starting ETL pipeline with 8 workers
-2025-01-17 16:05:24,895 - INFO - Creating MySQL engine in the main process...
-2025-01-17 16:05:24,933 - INFO - Inserted 2 patient records into MySQL table 'patient'.
-2025-01-17 16:05:24,969 - INFO - Inserted 48 encounter records into MySQL table 'encounter'.
-2025-01-17 16:05:25,036 - INFO - Inserted 13 condition records into MySQL table 'condition'.
-2025-01-17 16:05:25,135 - INFO - Inserted 137 observation records into MySQL table 'observation'.
-2025-01-17 16:05:25,238 - INFO - Inserted 54 procedure records into MySQL table 'procedure'.
-2025-01-17 16:05:25,284 - INFO - Inserted 59 claim records into MySQL table 'claim'.
-2025-01-17 16:05:25,331 - INFO - Inserted 5 careplan records into MySQL table 'careplan'.
-2025-01-17 16:05:25,370 - INFO - Inserted 5 careteam records into MySQL table 'careteam'.
-2025-01-17 16:05:25,415 - INFO - Inserted 19 immunization records into MySQL table 'immunization'.
-2025-01-17 16:05:25,474 - INFO - Inserted 11 medicationrequest records into MySQL table 'medicationrequest'.
-2025-01-17 16:05:25,521 - INFO - Inserted 7 diagnosticreport records into MySQL table 'diagnosticreport'.
-2025-01-17 16:05:25,551 - INFO - Inserted 48 explanationofbenefit records into MySQL table 'explanationofbenefit'.
-2025-01-17 16:05:25,576 - INFO - Inserted 2 goal records into MySQL table 'goal'.
-2025-01-17 16:05:25,604 - INFO - Inserted 5 organization records into MySQL table 'organization'.
-2025-01-17 16:05:25,650 - INFO - Inserted 5 practitioner records into MySQL table 'practitioner'.
-2025-01-17 16:05:25,651 - INFO - 
+2025-01-20 15:01:25,416 - INFO - Starting ETL pipeline with 8 workers
+2025-01-20 15:01:25,510 - INFO - Creating MySQL engine in the main process...
+2025-01-20 15:01:25,605 - INFO - Inserted 11 patient records into MySQL table 'patient'.
+2025-01-20 15:01:25,689 - INFO - Inserted 244 encounter records into MySQL table 'encounter'.
+2025-01-20 15:01:25,756 - INFO - Inserted 54 condition records into MySQL table 'condition'.
+2025-01-20 15:01:26,000 - INFO - Inserted 1229 observation records into MySQL table 'observation'.
+2025-01-20 15:01:26,096 - INFO - Inserted 63 procedure records into MySQL table 'procedure'.
+2025-01-20 15:01:26,195 - INFO - Inserted 293 claim records into MySQL table 'claim'.
+2025-01-20 15:01:26,257 - INFO - Inserted 19 careplan records into MySQL table 'careplan'.
+2025-01-20 15:01:26,316 - INFO - Inserted 19 careteam records into MySQL table 'careteam'.
+2025-01-20 15:01:26,394 - INFO - Inserted 143 immunization records into MySQL table 'immunization'.
+2025-01-20 15:01:26,460 - INFO - Inserted 49 medicationrequest records into MySQL table 'medicationrequest'.
+2025-01-20 15:01:26,514 - INFO - Inserted 6 allergyintolerance records into MySQL table 'allergyintolerance'.
+2025-01-20 15:01:26,571 - INFO - Inserted 1 device records into MySQL table 'device'.
+2025-01-20 15:01:26,644 - INFO - Inserted 69 diagnosticreport records into MySQL table 'diagnosticreport'.
+2025-01-20 15:01:26,719 - INFO - Inserted 244 explanationofbenefit records into MySQL table 'explanationofbenefit'.
+2025-01-20 15:01:26,774 - INFO - Inserted 16 goal records into MySQL table 'goal'.
+2025-01-20 15:01:26,843 - INFO - Inserted 1 imagingstudy records into MySQL table 'imagingstudy'.
+2025-01-20 15:01:26,894 - INFO - Inserted 26 organization records into MySQL table 'organization'.
+2025-01-20 15:01:26,953 - INFO - Inserted 26 practitioner records into MySQL table 'practitioner'.
+2025-01-20 15:01:26,954 - INFO - 
             ETL Pipeline completed:
-            - Duration: 2.46 seconds
-            - Total files processed: 2
-            - Total resources processed: 420
+            - Duration: 1.54 seconds
+            - Total files processed: 11
+            - Total resources processed: 2,513
             - Resources by type:
-              - patient: 2 records
-  - encounter: 48 records
-  - condition: 13 records
-  - observation: 137 records
-  - procedure: 54 records
-  - claim: 59 records
-  - careplan: 5 records
-  - careteam: 5 records
-  - immunization: 19 records
-  - medicationrequest: 11 records
-  - diagnosticreport: 7 records
-  - explanationofbenefit: 48 records
-  - goal: 2 records
-  - organization: 5 records
-  - practitioner: 5 records
+              - patient: 11 records
+  - encounter: 244 records
+  - condition: 54 records
+  - observation: 1,229 records
+  - procedure: 63 records
+  - claim: 293 records
+  - careplan: 19 records
+  - careteam: 19 records
+  - immunization: 143 records
+  - medicationrequest: 49 records
+  - allergyintolerance: 6 records
+  - device: 1 records
+  - diagnosticreport: 69 records
+  - explanationofbenefit: 244 records
+  - goal: 16 records
+  - imagingstudy: 1 records
+  - organization: 26 records
+  - practitioner: 26 records
             
