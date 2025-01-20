@@ -2,3 +2,5 @@ __pycache__/
 *.pyc
 etl_logs/
 backend/etl_logs/
+*.log
+backend/etl_logs/*.log

@@ -10,42 +10,42 @@ from datetime import datetime
 from pathlib import Path
 from typing import Dict, List, Optional, Tuple
 from tqdm import tqdm
-
 import pandas as pd
-from sqlalchemy import create_engine, Engine
-
-import logging
-from typing import Optional
-import dateutil.parser
-
-logger = logging.getLogger(__name__)
+import sqlalchemy as sa
+from sqlalchemy import create_engine, Engine, MetaData, Table, Column, Integer, String, Float, DateTime, ForeignKey
+from sqlalchemy.schema import DropTable
+from sqlalchemy.ext.compiler import compiles
+from sqlalchemy.sql import ddl
+from sqlalchemy.engine import Engine
+from sqlalchemy import create_engine, MetaData, Table, Column, ForeignKey, String
 
 # ------------------------------------------------------------------------------
 # 1. Resource extractors
 # ------------------------------------------------------------------------------
 
 def _clean_id(resource_id: Optional[str]) -> Optional[str]:
-    """Clean and standardize a FHIR resource ID."""
+    """Strip off 'Patient/', 'Encounter/', 'urn:uuid:', etc. to get the bare ID."""
     if not resource_id:
         return None
-    # Remove any 'urn:uuid:' prefix
+    # Always remove everything before the final slash (if present):
+    if '/' in resource_id:
+        resource_id = resource_id.split('/')[-1]
+    # If urn:uuid: is present, remove it:
     if 'urn:uuid:' in resource_id:
-        resource_id = resource_id.split('urn:uuid:')[-1]
+        resource_id = resource_id.replace('urn:uuid:', '')
     return resource_id.strip()
+
+
 
 def _extract_reference_id(reference: Optional[str]) -> Optional[str]:
     """Extract the resource ID portion from a reference string like 'Patient/123'."""
     if not reference:
         return None
-    parts = reference.split('/')
-    return parts[-1] if len(parts) > 1 else reference
+    return _clean_id(reference)
 
 def extract_patient(resource: dict) -> Optional[dict]:
-    """
-    Extract fields specific to a Patient resource.
-    https://www.hl7.org/fhir/patient.html
-    """
     if 'id' not in resource:
+        logger.warning("Patient resource missing 'id'; skipping.")
         return None
     patient_id = _clean_id(resource['id'])
     name = resource.get('name', [{}])[0]
@@ -57,7 +57,32 @@ def extract_patient(resource: dict) -> Optional[dict]:
         'gender': resource.get('gender'),
         'deceased_datetime': resource.get('deceasedDateTime')
     }
+    logger.debug(f"Extracted patient: {extracted}")
     return {k: v for k, v in extracted.items() if v is not None}
+
+
+import logging
+from typing import Optional
+import dateutil.parser
+
+logger = logging.getLogger(__name__)
+
+def _clean_id(resource_id: Optional[str]) -> Optional[str]:
+    """Clean and standardize a FHIR resource ID."""
+    if not resource_id:
+        return None
+    if isinstance(resource_id, str) and 'urn:uuid:' in resource_id:
+        resource_id = resource_id.split('urn:uuid:')[-1]
+    elif isinstance(resource_id, dict) and 'reference' in resource_id:
+        resource_id = resource_id['reference'].split('/')[-1]
+    return resource_id.strip() if resource_id else None
+
+def _extract_reference_id(reference: Optional[str]) -> Optional[str]:
+    """Extract the resource ID portion from a reference string like 'Patient/123'."""
+    if not reference:
+        return None
+    parts = reference.split('/')
+    return parts[-1] if len(parts) > 1 else reference
 
 def _try_parse_date(date_str: Optional[str]) -> Optional[str]:
     """
@@ -163,20 +188,19 @@ def extract_observation(resource: dict) -> Optional[dict]:
     if 'id' not in resource:
         return None
     obs_id = _clean_id(resource['id'])
-    value_quantity = resource.get('valueQuantity', {})
     extracted = {
         'id': obs_id,
-        'patient_reference': _extract_reference_id(
+        'patient_reference': _clean_id(_extract_reference_id(
             resource.get('subject', {}).get('reference')
-        ),
-        'encounter_reference': _extract_reference_id(
+        )),
+        'encounter_reference': _clean_id(_extract_reference_id(
             resource.get('encounter', {}).get('reference')
-        ),
+        )),
         'effective_datetime': resource.get('effectiveDateTime'),
         'issued': resource.get('issued'),
-        'value_quantity': value_quantity.get('value'),
-        'value_unit': value_quantity.get('unit'),
-        'value_code': value_quantity.get('code'),
+        'value_quantity': resource.get('valueQuantity', {}).get('value'),
+        'value_unit': resource.get('valueQuantity', {}).get('unit'),
+        'value_code': resource.get('valueQuantity', {}).get('code'),
         'status': resource.get('status')
     }
     return {k: v for k, v in extracted.items() if v is not None}
@@ -364,9 +388,9 @@ def extract_medicationadministration(resource: dict) -> Optional[dict]:
 RESOURCE_EXTRACTORS = {
     'patient': extract_patient,
     'encounter': extract_encounter,
-    'condition': extract_condition,
-    'observation': extract_observation,
-    'procedure': extract_procedure,
+    'medical_condition': extract_condition,
+    'medical_observation': extract_observation,
+    'medical_procedure': extract_procedure,
     'claim': extract_claim,
     'careplan': extract_careplan,
     'careteam': extract_careteam,
@@ -375,10 +399,546 @@ RESOURCE_EXTRACTORS = {
     'medicationadministration': extract_medicationadministration,
 }
 
+def create_tables(engine) -> None:
+    """
+    Create all tables with proper relationships before loading data.
+    Adjust or expand columns/foreign keys as needed for your project.
+    """
+    metadata = MetaData()
 
+    # --------------------------------------------------
+    # Patient table - core entity
+    # --------------------------------------------------
+    patient = Table('patient', metadata,
+                    Column('id', String(255), primary_key=True),
+                    Column('family_name', String(255)),
+                    Column('given_name', String(255)),
+                    Column('birth_date', String(50)),
+                    Column('gender', String(50)),
+                    Column('deceased_datetime', String(50))
+                    )
+
+    # --------------------------------------------------
+    # Encounter table - references patient
+    # --------------------------------------------------
+    encounter = Table('encounter', metadata,
+                      Column('id', String(255), primary_key=True),
+                      Column('patient_reference', String(255), ForeignKey('patient.id')),
+                      Column('start_date', String(50)),
+                      Column('end_date', String(50)),
+                      Column('status', String(50))
+                      )
+
+    # --------------------------------------------------
+    # Observation table - references patient and encounter
+    # --------------------------------------------------
+    medical_observation = Table('medical_observation', metadata,
+                        Column('id', String(255), primary_key=True),
+                        Column('patient_reference', String(255), ForeignKey('patient.id')),
+                        Column('encounter_reference', String(255), ForeignKey('encounter.id')),
+                        Column('effective_datetime', String(50)),
+                        Column('issued', String(50)),
+                        Column('value_quantity', Float),
+                        Column('value_unit', String(50)),
+                        Column('value_code', String(50)),
+                        Column('status', String(50))
+                        )
+
+    # --------------------------------------------------
+    # Condition table - references patient
+    # --------------------------------------------------
+    medical_condition = Table('medical_condition', metadata,
+                      Column('id', String(255), primary_key=True),
+                      Column('patient_reference', String(255), ForeignKey('patient.id')),
+                      Column('code_text', String(255)),
+                      Column('onset_datetime', String(50)),
+                      Column('abatement_datetime', String(50)),
+                      Column('recorded_date', String(50)),
+                      Column('verification_status', String(50))
+                      )
+
+    # --------------------------------------------------
+    # Procedure table - references patient and encounter
+    # --------------------------------------------------
+    medical_procedure = Table('medical_procedure', metadata,
+                      Column('id', String(255), primary_key=True),
+                      Column('patient_reference', String(255), ForeignKey('patient.id')),
+                      Column('encounter_reference', String(255), ForeignKey('encounter.id')),
+                      Column('start_date', String(50)),
+                      Column('end_date', String(50)),
+                      Column('status', String(50)),
+                      Column('code_text', String(255))
+                      )
+
+    # --------------------------------------------------
+    # CarePlan table - references patient
+    # --------------------------------------------------
+    careplan = Table('careplan', metadata,
+                     Column('id', String(255), primary_key=True),
+                     Column('patient_reference', String(255), ForeignKey('patient.id')),
+                     Column('status', String(50)),
+                     Column('intent', String(50)),
+                     Column('title', String(255)),
+                     Column('description', String(500)),
+                     Column('category_code', String(50)),
+                     Column('start_date', String(50)),
+                     Column('end_date', String(50))
+                     )
+
+    # --------------------------------------------------
+    # CareTeam table - references patient
+    # --------------------------------------------------
+    careteam = Table('careteam', metadata,
+                     Column('id', String(255), primary_key=True),
+                     Column('patient_reference', String(255), ForeignKey('patient.id')),
+                     Column('status', String(50)),
+                     Column('name', String(255)),
+                     Column('category_code', String(50))
+                     )
+
+    # --------------------------------------------------
+    # Immunization - references patient
+    # --------------------------------------------------
+    immunization = Table('immunization', metadata,
+                         Column('id', String(255), primary_key=True),
+                         Column('patient_reference', String(255), ForeignKey('patient.id')),
+                         Column('status', String(50)),
+                         Column('vaccine_code', String(50)),
+                         Column('occurrence_date', String(50)),
+                         Column('primary_source', String(50))
+                         )
+
+    # --------------------------------------------------
+    # MedicationRequest - references patient and (optionally) encounter
+    # --------------------------------------------------
+    medicationrequest = Table('medicationrequest', metadata,
+                              Column('id', String(255), primary_key=True),
+                              Column('patient_reference', String(255), ForeignKey('patient.id')),
+                              Column('encounter_reference', String(255), ForeignKey('encounter.id')),
+                              Column('status', String(50)),
+                              Column('intent', String(50)),
+                              Column('medication_code', String(50)),
+                              Column('authored_on', String(50))
+                              )
+
+    # --------------------------------------------------
+    # MedicationAdministration - references patient
+    # --------------------------------------------------
+    medicationadministration = Table('medicationadministration', metadata,
+                                     Column('id', String(255), primary_key=True),
+                                     Column('patient_reference', String(255), ForeignKey('patient.id')),
+                                     Column('status', String(50)),
+                                     Column('medication_code', String(50)),
+                                     Column('effective_datetime', String(50))
+                                     )
+
+    # --------------------------------------------------
+    # Claim - references patient (and possibly insurer, provider, etc.)
+    # --------------------------------------------------
+    claim = Table('claim', metadata,
+                  Column('id', String(255), primary_key=True),
+                  Column('patient_reference', String(255), ForeignKey('patient.id')),
+                  Column('status', String(50)),
+                  Column('type_code', String(50)),
+                  Column('use', String(50)),
+                  Column('created', String(50)),
+                  Column('provider_reference', String(255)),  # Not referencing a table yet
+                  Column('insurer_reference', String(255)),   # same
+                  Column('priority_code', String(50))
+                  )
+
+    # --------------------------------------------------
+    # Organization - might be referenced by claims, etc.
+    # --------------------------------------------------
+    organization = Table('organization', metadata,
+                         Column('id', String(255), primary_key=True),
+                         Column('name', String(255)),
+                         Column('type', String(50)),
+                         Column('active', String(50))
+                         # Add more fields if needed
+                         )
+
+    # --------------------------------------------------
+    # Practitioner - might be referenced by claims, encounters, etc.
+    # --------------------------------------------------
+    practitioner = Table('practitioner', metadata,
+                         Column('id', String(255), primary_key=True),
+                         Column('active', String(50)),
+                         Column('family_name', String(255)),
+                         Column('given_name', String(255)),
+                         Column('gender', String(50)),
+                         Column('birth_date', String(50))
+                         # Add more fields if needed
+                         )
+
+    # --------------------------------------------------
+    # Device - references patient (optional)
+    # --------------------------------------------------
+    device = Table('device', metadata,
+                   Column('id', String(255), primary_key=True),
+                   Column('patient_reference', String(255), ForeignKey('patient.id')),
+                   Column('type', String(255)),
+                   Column('udi', String(255)),
+                   Column('status', String(50))
+                   )
+
+    # --------------------------------------------------
+    # DiagnosticReport - references patient, maybe encounter
+    # --------------------------------------------------
+    diagnosticreport = Table('diagnosticreport', metadata,
+                             Column('id', String(255), primary_key=True),
+                             Column('patient_reference', String(255), ForeignKey('patient.id')),
+                             Column('encounter_reference', String(255), ForeignKey('encounter.id')),
+                             Column('status', String(50)),
+                             Column('code', String(255)),
+                             Column('effective_datetime', String(50)),
+                             Column('issued', String(50))
+                             )
+
+    # --------------------------------------------------
+    # ExplanationOfBenefit - references patient, claim?
+    # --------------------------------------------------
+    explanationofbenefit = Table('explanationofbenefit', metadata,
+                                 Column('id', String(255), primary_key=True),
+                                 Column('patient_reference', String(255), ForeignKey('patient.id')),
+                                 Column('status', String(50)),
+                                 Column('type_code', String(50)),
+                                 Column('use', String(50)),
+                                 Column('claim_reference', String(255)),  # Could reference claim.id if needed
+                                 Column('created', String(50))
+                                 )
+
+    # --------------------------------------------------
+    # Goal - references patient
+    # --------------------------------------------------
+    goal = Table('goal', metadata,
+                 Column('id', String(255), primary_key=True),
+                 Column('patient_reference', String(255), ForeignKey('patient.id')),
+                 Column('lifecycle_status', String(50)),
+                 Column('description', String(255)),
+                 Column('start_date', String(50))
+                 )
+
+    # --------------------------------------------------
+    # ImagingStudy - references patient, encounter
+    # --------------------------------------------------
+    imagingstudy = Table('imagingstudy', metadata,
+                         Column('id', String(255), primary_key=True),
+                         Column('patient_reference', String(255), ForeignKey('patient.id')),
+                         Column('encounter_reference', String(255), ForeignKey('encounter.id')),
+                         Column('started', String(50)),
+                         Column('number_of_series', Integer),
+                         Column('number_of_instances', Integer)
+                         )
+
+    # --------------------------------------------------
+    # AllergyIntolerance - references patient
+    # --------------------------------------------------
+    allergyintolerance = Table('allergyintolerance', metadata,
+                               Column('id', String(255), primary_key=True),
+                               Column('patient_reference', String(255), ForeignKey('patient.id')),
+                               Column('clinical_status', String(50)),
+                               Column('verification_status', String(50)),
+                               Column('category', String(50)),
+                               Column('criticality', String(50))
+                               )
+
+    # Finally, create all tables
+    metadata.create_all(engine)
+
+
+@compiles(DropTable, "mysql")
+def _compile_drop_table(element, compiler, **kwargs):
+    # Ensures "DROP TABLE ... CASCADE" syntax on MySQL
+    return compiler.visit_drop_table(element) + " CASCADE"
+
+def get_table_definitions(metadata: MetaData) -> None:
+    """
+    Define all tables (FHIR resources) with the desired columns and
+    foreign key relationships.  No tables are created here; just define them.
+    Use metadata.create_all(engine) afterward to create them in the DB.
+    """
+
+    # --------------------------------------------------
+    # PATIENT (core/parent)
+    # --------------------------------------------------
+    patient = Table('patient', metadata,
+                    Column('id', String(255), primary_key=True),
+                    Column('family_name', String(255)),
+                    Column('given_name', String(255)),
+                    Column('birth_date', String(50)),
+                    Column('gender', String(50)),
+                    Column('deceased_datetime', String(50))
+                    )
+
+    # --------------------------------------------------
+    # ENCOUNTER (references patient)
+    # --------------------------------------------------
+    encounter = Table('encounter', metadata,
+                      Column('id', String(255), primary_key=True),
+                      Column('patient_reference', String(255),
+                             ForeignKey('patient.id', ondelete='CASCADE')),
+                      Column('start_date', String(50)),
+                      Column('end_date', String(50)),
+                      Column('status', String(50))
+                      )
+
+    # --------------------------------------------------
+    # OBSERVATION (references patient, encounter)
+    # --------------------------------------------------
+    medical_observation = Table('medical_observation', metadata,
+                        Column('id', String(255), primary_key=True),
+                        Column('patient_reference', String(255),
+                               ForeignKey('patient.id', ondelete='CASCADE')),
+                        Column('encounter_reference', String(255),
+                               ForeignKey('encounter.id', ondelete='CASCADE')),
+                        Column('effective_datetime', String(50)),
+                        Column('issued', String(50)),
+                        Column('value_quantity', Float),
+                        Column('value_unit', String(50)),
+                        Column('value_code', String(50)),
+                        Column('status', String(50))
+                        )
+
+    # --------------------------------------------------
+    # PROCEDURE (references patient, encounter)
+    # --------------------------------------------------
+    medical_procedure = Table('medical_procedure', metadata,
+                      Column('id', String(255), primary_key=True),
+                      Column('patient_reference', String(255),
+                             ForeignKey('patient.id', ondelete='CASCADE')),
+                      Column('encounter_reference', String(255),
+                             ForeignKey('encounter.id', ondelete='CASCADE')),
+                      Column('start_date', String(50)),
+                      Column('end_date', String(50)),
+                      Column('status', String(50)),
+                      Column('code_text', String(255))
+                      )
+
+    # --------------------------------------------------
+    # CONDITION (references patient)
+    # --------------------------------------------------
+    medical_condition = Table('medical_condition', metadata,
+                      Column('id', String(255), primary_key=True),
+                      Column('patient_reference', String(255),
+                             ForeignKey('patient.id', ondelete='CASCADE')),
+                      Column('code_text', String(255)),
+                      Column('onset_datetime', String(50)),
+                      Column('abatement_datetime', String(50)),
+                      Column('recorded_date', String(50)),
+                      Column('verification_status', String(50))
+                      )
+
+    # --------------------------------------------------
+    # ALLERGYINTOLERANCE (references patient)
+    # --------------------------------------------------
+    allergyintolerance = Table('allergyintolerance', metadata,
+                               Column('id', String(255), primary_key=True),
+                               Column('patient_reference', String(255),
+                                      ForeignKey('patient.id', ondelete='CASCADE')),
+                               Column('clinical_status', String(50)),
+                               Column('verification_status', String(50)),
+                               Column('category', String(50)),
+                               Column('criticality', String(50))
+                               )
+
+    # --------------------------------------------------
+    # CAREPLAN (references patient)
+    # --------------------------------------------------
+    careplan = Table('careplan', metadata,
+                     Column('id', String(255), primary_key=True),
+                     Column('patient_reference', String(255),
+                            ForeignKey('patient.id', ondelete='CASCADE')),
+                     Column('status', String(50)),
+                     Column('intent', String(50)),
+                     Column('title', String(255)),
+                     Column('description', String(500)),
+                     Column('category_code', String(50)),
+                     Column('start_date', String(50)),
+                     Column('end_date', String(50))
+                     )
+
+    # --------------------------------------------------
+    # CARETEAM (references patient)
+    # --------------------------------------------------
+    careteam = Table('careteam', metadata,
+                     Column('id', String(255), primary_key=True),
+                     Column('patient_reference', String(255),
+                            ForeignKey('patient.id', ondelete='CASCADE')),
+                     Column('status', String(50)),
+                     Column('name', String(255)),
+                     Column('category_code', String(50))
+                     )
+
+    # --------------------------------------------------
+    # IMMUNIZATION (references patient)
+    # --------------------------------------------------
+    immunization = Table('immunization', metadata,
+                         Column('id', String(255), primary_key=True),
+                         Column('patient_reference', String(255),
+                                ForeignKey('patient.id', ondelete='CASCADE')),
+                         Column('status', String(50)),
+                         Column('vaccine_code', String(50)),
+                         Column('occurrence_date', String(50)),
+                         Column('primary_source', String(50))
+                         )
+
+    # --------------------------------------------------
+    # MEDICATIONREQUEST (references patient, encounter)
+    # --------------------------------------------------
+    medicationrequest = Table('medicationrequest', metadata,
+                              Column('id', String(255), primary_key=True),
+                              Column('patient_reference', String(255),
+                                     ForeignKey('patient.id', ondelete='CASCADE')),
+                              Column('encounter_reference', String(255),
+                                     ForeignKey('encounter.id', ondelete='CASCADE')),
+                              Column('status', String(50)),
+                              Column('intent', String(50)),
+                              Column('medication_code', String(50)),
+                              Column('authored_on', String(50))
+                              )
+
+    # --------------------------------------------------
+    # MEDICATIONADMINISTRATION (references patient)
+    # --------------------------------------------------
+    medicationadministration = Table('medicationadministration', metadata,
+                                     Column('id', String(255), primary_key=True),
+                                     Column('patient_reference', String(255),
+                                            ForeignKey('patient.id', ondelete='CASCADE')),
+                                     Column('status', String(50)),
+                                     Column('medication_code', String(50)),
+                                     Column('effective_datetime', String(50))
+                                     )
+
+    # --------------------------------------------------
+    # CLAIM (references patient) - could also reference organization or practitioner
+    # --------------------------------------------------
+    claim = Table('claim', metadata,
+                  Column('id', String(255), primary_key=True),
+                  Column('patient_reference', String(255),
+                         ForeignKey('patient.id', ondelete='CASCADE')),
+                  Column('status', String(50)),
+                  Column('type_code', String(50)),
+                  Column('use', String(50)),
+                  Column('created', String(50)),
+                  Column('provider_reference', String(255)),  # optional
+                  Column('insurer_reference', String(255)),   # optional
+                  Column('priority_code', String(50))
+                  )
+
+    # --------------------------------------------------
+    # DEVICE (references patient)
+    # --------------------------------------------------
+    device = Table('device', metadata,
+                   Column('id', String(255), primary_key=True),
+                   Column('patient_reference', String(255),
+                          ForeignKey('patient.id', ondelete='CASCADE')),
+                   Column('type', String(255)),
+                   Column('udi', String(255)),
+                   Column('status', String(50))
+                   )
+
+    # --------------------------------------------------
+    # DIAGNOSTICREPORT (references patient, encounter)
+    # --------------------------------------------------
+    diagnosticreport = Table('diagnosticreport', metadata,
+                             Column('id', String(255), primary_key=True),
+                             Column('patient_reference', String(255),
+                                    ForeignKey('patient.id', ondelete='CASCADE')),
+                             Column('encounter_reference', String(255),
+                                    ForeignKey('encounter.id', ondelete='CASCADE')),
+                             Column('status', String(50)),
+                             Column('code', String(255)),
+                             Column('effective_datetime', String(50)),
+                             Column('issued', String(50))
+                             )
+
+    # --------------------------------------------------
+    # EXPLANATIONOFBENEFIT (references patient, claim?)
+    # --------------------------------------------------
+    explanationofbenefit = Table('explanationofbenefit', metadata,
+                                 Column('id', String(255), primary_key=True),
+                                 Column('patient_reference', String(255),
+                                        ForeignKey('patient.id', ondelete='CASCADE')),
+                                 Column('status', String(50)),
+                                 Column('type_code', String(50)),
+                                 Column('use', String(50)),
+                                 Column('claim_reference', String(255)),  # could reference claim.id if you like
+                                 Column('created', String(50))
+                                 )
+
+    # --------------------------------------------------
+    # GOAL (references patient)
+    # --------------------------------------------------
+    goal = Table('goal', metadata,
+                 Column('id', String(255), primary_key=True),
+                 Column('patient_reference', String(255),
+                        ForeignKey('patient.id', ondelete='CASCADE')),
+                 Column('lifecycle_status', String(50)),
+                 Column('description', String(255)),
+                 Column('start_date', String(50))
+                 )
+
+    # --------------------------------------------------
+    # IMAGINGSTUDY (references patient, encounter)
+    # --------------------------------------------------
+    imagingstudy = Table('imagingstudy', metadata,
+                         Column('id', String(255), primary_key=True),
+                         Column('patient_reference', String(255),
+                                ForeignKey('patient.id', ondelete='CASCADE')),
+                         Column('encounter_reference', String(255),
+                                ForeignKey('encounter.id', ondelete='CASCADE')),
+                         Column('started', String(50)),
+                         Column('number_of_series', Integer),
+                         Column('number_of_instances', Integer)
+                         )
+
+    # --------------------------------------------------
+    # ORGANIZATION - may not reference patient
+    # --------------------------------------------------
+    organization = Table('organization', metadata,
+                         Column('id', String(255), primary_key=True),
+                         Column('name', String(255)),
+                         Column('type', String(50)),
+                         Column('active', String(50))
+                         )
+
+    # --------------------------------------------------
+    # PRACTITIONER - typically not referencing patient
+    # --------------------------------------------------
+    practitioner = Table('practitioner', metadata,
+                         Column('id', String(255), primary_key=True),
+                         Column('active', String(50)),
+                         Column('family_name', String(255)),
+                         Column('given_name', String(255)),
+                         Column('gender', String(50)),
+                         Column('birth_date', String(50))
+                         )
+
+def create_database_schema(engine: Engine, logger) -> None:
+    """Create database schema with proper relationship handling."""
+    metadata = MetaData()
+
+    # Get all table definitions
+    get_table_definitions(metadata)
+
+    try:
+        # Drop all tables in reverse dependency order
+        logger.info("Dropping existing tables...")
+        metadata.reflect(bind=engine)
+        metadata.drop_all(bind=engine)
+
+        # Create all tables in correct dependency order
+        logger.info("Creating new tables with relationships...")
+        metadata.create_all(bind=engine)
+
+    except Exception as e:
+        logger.error(f"Error in schema creation: {e}")
+        raise
 # ------------------------------------------------------------------------------
 # 2. ETL Pipeline Class
 # ------------------------------------------------------------------------------
+
 
 class HealthcareETL:
     """ETL class that extracts FHIR JSON data in parallel, then loads into MySQL."""
@@ -422,7 +982,7 @@ class HealthcareETL:
             "medicationrequest",
             "organization",
             "practitioner",
-            "procedure",  # or any others
+            "medical_procedure",  # or any others
         ]
         for rt in additional_types:
             if rt not in self.resource_data:
@@ -453,6 +1013,12 @@ class HealthcareETL:
         if it exists in RESOURCE_EXTRACTORS.
         """
         resource_type = resource.get("resourceType", "").lower()
+        if resource_type == "condition":
+            resource_type = "medical_condition"
+        elif resource_type == "observation":
+            resource_type = "medical_observation"
+        elif resource_type == 'procedure':
+            resource_type = 'medical_procedure'
         extractor = RESOURCE_EXTRACTORS.get(resource_type)
         if extractor:
             extracted = extractor(resource)
@@ -501,6 +1067,72 @@ class HealthcareETL:
                 batch_results.setdefault(rtype, []).extend(records)
         return batch_results
 
+
+
+    def modified_save_resource_mysql(self, engine, resource_type: str, data: list):
+        if not data:
+            self.logger.warning(f"No data provided for {resource_type}. Skipping.")
+            return
+
+        try:
+            # Handle the patient resource differently
+            if resource_type == 'patient':
+                self.logger.info(f"Loading {len(data)} patient records.")
+                df = pd.DataFrame(data)
+                self.logger.debug(f"Patient DataFrame columns: {df.columns}")
+            else:
+                # Convert data to DataFrame for other resources
+                df = pd.DataFrame(data)
+
+                # Log DataFrame info
+                self.logger.debug(f"{resource_type} DataFrame columns: {df.columns}")
+
+                # Check if 'patient_reference' exists
+                if 'patient_reference' in df.columns:
+                    self.logger.debug(f"Sample patient_reference values: {df['patient_reference'].head()}")
+                else:
+                    self.logger.warning(f"Column 'patient_reference' is missing in {resource_type}")
+
+                # Clean ID and reference columns
+                for col in df.columns:
+                    if 'id' in col.lower() or 'reference' in col.lower():
+                        df[col] = df[col].apply(lambda x: _clean_id(str(x)) if pd.notnull(x) else x)
+
+                # Validate patient references
+                if resource_type != 'patient' and 'patient_reference' in df.columns:
+                    valid_patient_ids = set(pd.read_sql('SELECT id FROM patient', engine)['id'])
+                    self.logger.debug(f"Valid patient IDs: {list(valid_patient_ids)[:5]} (Total: {len(valid_patient_ids)})")
+                    before_count = len(df)
+                    df = df[df['patient_reference'].isin(valid_patient_ids)]
+                    after_count = len(df)
+                    self.logger.info(f"Filtered {resource_type} records: {before_count} -> {after_count}")
+
+                # Validate encounter references
+                if 'encounter_reference' in df.columns:
+                    valid_encounter_ids = set(pd.read_sql('SELECT id FROM encounter', engine)['id'])
+                    self.logger.debug(f"Valid encounter IDs: {list(valid_encounter_ids)[:5]} (Total: {len(valid_encounter_ids)})")
+                    before_count = len(df)
+                    df = df[df['encounter_reference'].isin(valid_encounter_ids)]
+                    after_count = len(df)
+                    self.logger.info(f"Filtered {resource_type} records: {before_count} -> {after_count}")
+
+            # Insert valid data into MySQL
+            if len(df) > 0:
+                df.to_sql(
+                    name=resource_type,
+                    con=engine,
+                    if_exists="append",
+                    index=False,
+                    method="multi",
+                    chunksize=1000
+                )
+                self.logger.info(f"Successfully inserted {len(df)} {resource_type} records")
+            else:
+                self.logger.warning(f"No valid {resource_type} records to insert")
+        except Exception as e:
+            self.logger.error(f"Error inserting {resource_type}: {str(e)}")
+
+
     def run_pipeline(self, mysql_url: str) -> None:
         """
         Main entry point:
@@ -544,13 +1176,49 @@ class HealthcareETL:
         self.logger.info("Creating MySQL engine in the main process...")
         try:
             engine = create_engine(mysql_url, echo=False)
+            engine.connect()
+            self.logger.info("Engine created and connected.")
+            self.logger.info("Creating tables with relationships...")
+            create_database_schema(engine, self.logger)
+
+            # Define loading order based on dependencies
+            loading_order = [
+                'patient',          # Load core entity first
+                'encounter',        # Depends on patient
+                'medical_observation',
+                'medical_condition', # Depends on patient and encounter
+                'medical_procedure',        # Depends on patient and encounter        # Depends on patient
+                'careplan',        # Depends on patient
+                'careteam',        # Depends on patient
+                'immunization',    # Depends on patient
+                'medicationrequest', # Depends on patient
+                'medicationadministration'  # Depends on patient
+            ]
+
+            # Load data in correct order
+            for resource_type in loading_order:
+                if resource_type in self.resource_data and self.resource_data[resource_type]:
+                    self.logger.info(f"Loading {resource_type} data...")
+                    # Add count logging
+                    before_count = len(self.resource_data[resource_type])
+                    self.modified_save_resource_mysql(engine, resource_type,
+                                                      self.resource_data[resource_type])
+
+                    # Verify loaded count
+                    actual_count = pd.read_sql(
+                        f'SELECT COUNT(*) as cnt FROM {resource_type}',
+                        engine
+                    ).iloc[0]['cnt']
+                    self.logger.info(
+                        f"{resource_type}: Attempted={before_count}, Loaded={actual_count}"
+                    )
         except Exception as e:
             self.logger.error(f"Could not create engine: {e}")
             return
 
-        # 4. Insert data into MySQL
+        '''# 4. Insert data into MySQL
         for rtype, data in self.resource_data.items():
-            self._save_resource_mysql(engine, rtype, data)
+            self._save_resource_mysql(engine, rtype, data)'''
 
         duration = (datetime.now() - start_time).total_seconds()
         self.logger.info(
