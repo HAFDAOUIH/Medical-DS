@@ -1,39 +1,70 @@
-2025-01-17 16:05:23,186 - INFO - Starting ETL pipeline with 8 workers
-2025-01-17 16:05:24,895 - INFO - Creating MySQL engine in the main process...
-2025-01-17 16:05:24,933 - INFO - Inserted 2 patient records into MySQL table 'patient'.
-2025-01-17 16:05:24,969 - INFO - Inserted 48 encounter records into MySQL table 'encounter'.
-2025-01-17 16:05:25,036 - INFO - Inserted 13 condition records into MySQL table 'condition'.
-2025-01-17 16:05:25,135 - INFO - Inserted 137 observation records into MySQL table 'observation'.
-2025-01-17 16:05:25,238 - INFO - Inserted 54 procedure records into MySQL table 'procedure'.
-2025-01-17 16:05:25,284 - INFO - Inserted 59 claim records into MySQL table 'claim'.
-2025-01-17 16:05:25,331 - INFO - Inserted 5 careplan records into MySQL table 'careplan'.
-2025-01-17 16:05:25,370 - INFO - Inserted 5 careteam records into MySQL table 'careteam'.
-2025-01-17 16:05:25,415 - INFO - Inserted 19 immunization records into MySQL table 'immunization'.
-2025-01-17 16:05:25,474 - INFO - Inserted 11 medicationrequest records into MySQL table 'medicationrequest'.
-2025-01-17 16:05:25,521 - INFO - Inserted 7 diagnosticreport records into MySQL table 'diagnosticreport'.
-2025-01-17 16:05:25,551 - INFO - Inserted 48 explanationofbenefit records into MySQL table 'explanationofbenefit'.
-2025-01-17 16:05:25,576 - INFO - Inserted 2 goal records into MySQL table 'goal'.
-2025-01-17 16:05:25,604 - INFO - Inserted 5 organization records into MySQL table 'organization'.
-2025-01-17 16:05:25,650 - INFO - Inserted 5 practitioner records into MySQL table 'practitioner'.
-2025-01-17 16:05:25,651 - INFO - 
+2025-01-20 14:21:44,683 - INFO - Starting ETL pipeline with 8 workers
+2025-01-20 14:21:48,554 - INFO - Creating MySQL engine in the main process...
+2025-01-20 14:21:48,604 - INFO - Engine created and connected.
+2025-01-20 14:21:48,605 - INFO - Creating tables with relationships...
+2025-01-20 14:21:48,615 - INFO - Dropping existing tables...
+2025-01-20 14:21:48,853 - INFO - Creating new tables with relationships...
+2025-01-20 14:21:52,771 - INFO - Loading patient data...
+2025-01-20 14:21:52,772 - INFO - Loading 11 patient records.
+2025-01-20 14:21:52,817 - INFO - Successfully inserted 11 patient records
+2025-01-20 14:21:52,866 - INFO - patient: Attempted=11, Loaded=11
+2025-01-20 14:21:52,866 - INFO - Loading encounter data...
+2025-01-20 14:21:52,891 - INFO - Filtered encounter records: 244 -> 244
+2025-01-20 14:21:53,090 - INFO - Successfully inserted 244 encounter records
+2025-01-20 14:21:53,101 - INFO - encounter: Attempted=244, Loaded=244
+2025-01-20 14:21:53,102 - INFO - Loading medical_observation data...
+2025-01-20 14:21:53,124 - INFO - Filtered medical_observation records: 1229 -> 1229
+2025-01-20 14:21:53,157 - INFO - Filtered medical_observation records: 1229 -> 1229
+2025-01-20 14:21:55,011 - INFO - Successfully inserted 1229 medical_observation records
+2025-01-20 14:21:55,049 - INFO - medical_observation: Attempted=1229, Loaded=1229
+2025-01-20 14:21:55,050 - INFO - Loading medical_condition data...
+2025-01-20 14:21:55,076 - INFO - Filtered medical_condition records: 54 -> 54
+2025-01-20 14:21:55,116 - INFO - Successfully inserted 54 medical_condition records
+2025-01-20 14:21:55,129 - INFO - medical_condition: Attempted=54, Loaded=54
+2025-01-20 14:21:55,129 - INFO - Loading medical_procedure data...
+2025-01-20 14:21:55,144 - INFO - Filtered medical_procedure records: 63 -> 63
+2025-01-20 14:21:55,157 - INFO - Filtered medical_procedure records: 63 -> 63
+2025-01-20 14:21:55,193 - INFO - Successfully inserted 63 medical_procedure records
+2025-01-20 14:21:55,240 - INFO - medical_procedure: Attempted=63, Loaded=63
+2025-01-20 14:21:55,240 - INFO - Loading careplan data...
+2025-01-20 14:21:55,261 - INFO - Filtered careplan records: 19 -> 19
+2025-01-20 14:21:55,293 - INFO - Successfully inserted 19 careplan records
+2025-01-20 14:21:55,331 - INFO - careplan: Attempted=19, Loaded=19
+2025-01-20 14:21:55,332 - INFO - Loading careteam data...
+2025-01-20 14:21:55,348 - INFO - Filtered careteam records: 19 -> 19
+2025-01-20 14:21:55,379 - INFO - Successfully inserted 19 careteam records
+2025-01-20 14:21:55,395 - INFO - careteam: Attempted=19, Loaded=19
+2025-01-20 14:21:55,395 - INFO - Loading immunization data...
+2025-01-20 14:21:55,411 - INFO - Filtered immunization records: 143 -> 143
+2025-01-20 14:21:55,541 - INFO - Successfully inserted 143 immunization records
+2025-01-20 14:21:55,573 - INFO - immunization: Attempted=143, Loaded=143
+2025-01-20 14:21:55,573 - INFO - Loading medicationrequest data...
+2025-01-20 14:21:55,590 - INFO - Filtered medicationrequest records: 49 -> 49
+2025-01-20 14:21:55,824 - INFO - Filtered medicationrequest records: 49 -> 49
+2025-01-20 14:21:56,053 - INFO - Successfully inserted 49 medicationrequest records
+2025-01-20 14:21:56,076 - INFO - medicationrequest: Attempted=49, Loaded=49
+2025-01-20 14:21:56,077 - INFO - 
             ETL Pipeline completed:
-            - Duration: 2.46 seconds
-            - Total files processed: 2
-            - Total resources processed: 420
+            - Duration: 11.39 seconds
+            - Total files processed: 11
+            - Total resources processed: 2,513
             - Resources by type:
-              - patient: 2 records
-  - encounter: 48 records
-  - condition: 13 records
-  - observation: 137 records
-  - procedure: 54 records
-  - claim: 59 records
-  - careplan: 5 records
-  - careteam: 5 records
-  - immunization: 19 records
-  - medicationrequest: 11 records
-  - diagnosticreport: 7 records
-  - explanationofbenefit: 48 records
-  - goal: 2 records
-  - organization: 5 records
-  - practitioner: 5 records
+              - patient: 11 records
+  - encounter: 244 records
+  - medical_condition: 54 records
+  - medical_observation: 1,229 records
+  - medical_procedure: 63 records
+  - claim: 293 records
+  - careplan: 19 records
+  - careteam: 19 records
+  - immunization: 143 records
+  - medicationrequest: 49 records
+  - allergyintolerance: 6 records
+  - device: 1 records
+  - diagnosticreport: 69 records
+  - explanationofbenefit: 244 records
+  - goal: 16 records
+  - imagingstudy: 1 records
+  - organization: 26 records
+  - practitioner: 26 records
             
