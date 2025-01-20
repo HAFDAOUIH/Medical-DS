@@ -5,8 +5,9 @@ import os
 import shutil
 import pymysql
 from healthcare_etl import HealthcareETL
-
+from flask_cors import CORS, cross_origin
 app = Flask(__name__)
+cors = CORS(app)
 
 # Configuration
 app.config['UPLOAD_FOLDER'] = './uploads'

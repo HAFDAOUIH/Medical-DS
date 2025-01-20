@@ -1,1 +1,37 @@
-<p>upload works!</p>
+<div class="container">
+    <mat-tab-group>
+      <!-- Tab for Directory Upload -->
+      <mat-tab label="Directory Upload">
+        <div class="upload-section">
+          <input type="file" (change)="onDirectorySelected($event)" webkitdirectory mozdirectory multiple>
+          <button mat-raised-button color="primary" (click)="uploadFiles()" [disabled]="isUploading">
+            <mat-icon *ngIf="isUploading">loop</mat-icon>
+            Upload Directory
+          </button>
+          <div *ngIf="isUploading" class="progress">
+            <mat-spinner diameter="30"></mat-spinner>
+          </div>
+        </div>
+      </mat-tab>
+  
+      <!-- Tab for Single File Upload -->
+      <mat-tab label="Single File Upload">
+        <div class="upload-section">
+          <input type="file" (change)="onFileSelected($event)" accept=".csv, .json, .xml">
+          <button mat-raised-button color="primary" (click)="uploadFiles()" [disabled]="isUploading">
+            <mat-icon *ngIf="isUploading">loop</mat-icon>
+            Upload File
+          </button>
+          <div *ngIf="isUploading" class="progress">
+            <mat-spinner diameter="30"></mat-spinner>
+          </div>
+        </div>
+      </mat-tab>
+    </mat-tab-group>
+  
+    <!-- Upload Status Message -->
+    <div *ngIf="uploadMessage" class="upload-message">
+      <p>{{ uploadMessage }}</p>
+    </div>
+  </div>
+  

@@ -1,5 +1,7 @@
 .sidenav-container {
   height: 100%;
+  display: flex;
+  flex-direction: column;
 }
 
 .sidenav {
@@ -14,4 +16,29 @@
   position: sticky;
   top: 0;
   z-index: 1;
+}
+
+mat-sidenav-container {
+  position: relative;
+  height: 100vh; /* Ensure the container takes the full viewport height */
+}
+
+mat-sidenav-content {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+mat-toolbar {
+  background-color: #3f51b5; /* You can change the color as needed */
+}
+
+mat-sidenav {
+  top: 0;
+  bottom: 0;
+  position: fixed;
+}
+
+.mat-nav-list a {
+  color: #fff; /* Ensures links are visible */
 }

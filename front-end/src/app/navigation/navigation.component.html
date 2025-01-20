@@ -1,4 +1,5 @@
 <mat-sidenav-container class="sidenav-container">
+  <!-- Sidenav Section -->
   <mat-sidenav #drawer class="sidenav" fixedInViewport
       [attr.role]="(isHandset$ | async) ? 'dialog' : 'navigation'"
       [mode]="(isHandset$ | async) ? 'over' : 'side'"
@@ -10,19 +11,23 @@
       <a mat-list-item href="#">Link 3</a>
     </mat-nav-list>
   </mat-sidenav>
+
+  <!-- Content Section -->
   <mat-sidenav-content>
+    <!-- Toolbar Section -->
     <mat-toolbar color="primary">
-      @if (isHandset$ | async) {
-        <button
+      <!-- Conditional Button for Handset View -->
+      <button *ngIf="isHandset$ | async"
           type="button"
           aria-label="Toggle sidenav"
           mat-icon-button
           (click)="drawer.toggle()">
-          <mat-icon aria-label="Side nav toggle icon">menu</mat-icon>
-        </button>
-      }
+        <mat-icon aria-label="Side nav toggle icon">menu</mat-icon>
+      </button>
       <span>front-end</span>
     </mat-toolbar>
-    <!-- Add Content Here -->
+
+    <!-- Router Outlet -->
+    <router-outlet></router-outlet>
   </mat-sidenav-content>
 </mat-sidenav-container>
