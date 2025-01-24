@@ -1,0 +1,82 @@
+<div class="patient-container">
+    <!-- Patient Table -->
+    <table mat-table [dataSource]="patients" class="mat-elevation-z8">
+  
+      <!-- Patient ID Column -->
+      <ng-container matColumnDef="patient_id">
+        <th mat-header-cell *matHeaderCellDef> Patient ID </th>
+        <td mat-cell *matCellDef="let patient"> {{ patient.patient_id }} </td>
+      </ng-container>
+  
+      <!-- Full Name Column -->
+      <ng-container matColumnDef="full_name">
+        <th mat-header-cell *matHeaderCellDef> Full Name </th>
+        <td mat-cell *matCellDef="let patient"> {{ patient.full_name }} </td>
+      </ng-container>
+  
+      <!-- Birth Date Column -->
+      <ng-container matColumnDef="birth_date">
+        <th mat-header-cell *matHeaderCellDef> Birth Date </th>
+        <td mat-cell *matCellDef="let patient"> {{ patient.birth_date | date }} </td>
+      </ng-container>
+  
+      <!-- Gender Column -->
+      <ng-container matColumnDef="gender">
+        <th mat-header-cell *matHeaderCellDef> Gender </th>
+        <td mat-cell *matCellDef="let patient"> {{ patient.gender }} </td>
+      </ng-container>
+  
+      <!-- Deceased Date Column -->
+      <ng-container matColumnDef="deceased_datetime">
+        <th mat-header-cell *matHeaderCellDef> Deceased </th>
+        <td mat-cell *matCellDef="let patient"> {{ patient.deceased_datetime ? (patient.deceased_datetime | date) : 'No' }} </td>
+      </ng-container>
+  
+      <!-- Encounter Count Column -->
+      <ng-container matColumnDef="encounter_count">
+        <th mat-header-cell *matHeaderCellDef> Encounters </th>
+        <td mat-cell *matCellDef="let patient"> {{ patient.encounter_count }} </td>
+      </ng-container>
+  
+      <!-- Condition Count Column -->
+      <ng-container matColumnDef="condition_count">
+        <th mat-header-cell *matHeaderCellDef> Conditions </th>
+        <td mat-cell *matCellDef="let patient"> {{ patient.condition_count }} </td>
+      </ng-container>
+  
+      <!-- Observation Count Column -->
+      <ng-container matColumnDef="observation_count">
+        <th mat-header-cell *matHeaderCellDef> Observations </th>
+        <td mat-cell *matCellDef="let patient"> {{ patient.observation_count }} </td>
+      </ng-container>
+  
+      <!-- Medication Request Count Column -->
+      <ng-container matColumnDef="request_count">
+        <th mat-header-cell *matHeaderCellDef> Medication Requests </th>
+        <td mat-cell *matCellDef="let patient"> {{ patient.request_count }} </td>
+      </ng-container>
+  
+      <!-- Procedure Count Column -->
+      <ng-container matColumnDef="procedure_count">
+        <th mat-header-cell *matHeaderCellDef> Procedures </th>
+        <td mat-cell *matCellDef="let patient"> {{ patient.procedure_count }} </td>
+      </ng-container>
+  
+      <!-- Immunization Count Column -->
+      <ng-container matColumnDef="immunization_count">
+        <th mat-header-cell *matHeaderCellDef> Immunizations </th>
+        <td mat-cell *matCellDef="let patient"> {{ patient.immunization_count }} </td>
+      </ng-container>
+  
+      <!-- Care Plan Count Column -->
+      <ng-container matColumnDef="careplan_count">
+        <th mat-header-cell *matHeaderCellDef> Care Plans </th>
+        <td mat-cell *matCellDef="let patient"> {{ patient.careplan_count }} </td>
+      </ng-container>
+  
+      <!-- Header and Row Definitions -->
+      <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+      <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+    </table>
+</div>
+  

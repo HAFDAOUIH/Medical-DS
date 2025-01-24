@@ -60,6 +60,18 @@ export class MedicalRecordService {
     return this.http.get(url, { params });
   }
 
+  getAllPatients():Observable<any>{
+    if (!this.mysqlUrl) {
+      throw new Error('MySQL URL is not set');
+    }
+
+    const url = `${this.baseUrl}/patients`;
+    const params = new HttpParams()
+      .set('mysql_url', this.mysqlUrl)
+
+    return this.http.get(url, { params });
+  }
+
   /**
    * Search for patients by name (partial match).
    * @param name The name (or part of it) to search for.

@@ -1,66 +1,70 @@
-2025-01-20 17:36:55,185 - INFO - Starting ETL pipeline with 8 workers
-2025-01-20 17:36:55,272 - INFO - Creating MySQL engine in the main process...
-2025-01-20 17:36:55,309 - INFO - Engine created and connected.
-2025-01-20 17:36:55,310 - INFO - Creating tables with relationships...
-2025-01-20 17:36:55,322 - INFO - Dropping existing tables...
-2025-01-20 17:36:56,237 - INFO - Creating new tables with relationships...
-2025-01-20 17:36:57,569 - INFO - Loading patient data...
-2025-01-20 17:36:57,570 - INFO - Loading 1 patient records.
-2025-01-20 17:36:57,590 - INFO - Successfully inserted 1 patient records
-2025-01-20 17:36:57,595 - INFO - patient: Attempted=1, Loaded=1
-2025-01-20 17:36:57,595 - INFO - Loading encounter data...
-2025-01-20 17:36:57,603 - INFO - Filtered encounter records: 14 -> 14
-2025-01-20 17:36:57,625 - INFO - Successfully inserted 14 encounter records
-2025-01-20 17:36:57,629 - INFO - encounter: Attempted=14, Loaded=14
-2025-01-20 17:36:57,630 - INFO - Loading medical_observation data...
-2025-01-20 17:36:57,636 - INFO - Filtered medical_observation records: 72 -> 72
-2025-01-20 17:36:57,639 - INFO - Filtered medical_observation records: 72 -> 72
-2025-01-20 17:36:57,673 - INFO - Successfully inserted 72 medical_observation records
-2025-01-20 17:36:57,677 - INFO - medical_observation: Attempted=72, Loaded=72
-2025-01-20 17:36:57,677 - INFO - Loading medical_condition data...
-2025-01-20 17:36:57,683 - INFO - Filtered medical_condition records: 6 -> 6
-2025-01-20 17:36:57,702 - INFO - Successfully inserted 6 medical_condition records
-2025-01-20 17:36:57,705 - INFO - medical_condition: Attempted=6, Loaded=6
-2025-01-20 17:36:57,705 - INFO - Loading medical_procedure data...
-2025-01-20 17:36:57,711 - INFO - Filtered medical_procedure records: 3 -> 3
-2025-01-20 17:36:57,715 - INFO - Filtered medical_procedure records: 3 -> 3
-2025-01-20 17:36:57,729 - INFO - Successfully inserted 3 medical_procedure records
-2025-01-20 17:36:57,732 - INFO - medical_procedure: Attempted=3, Loaded=3
-2025-01-20 17:36:57,732 - INFO - Loading careplan data...
-2025-01-20 17:36:57,737 - INFO - Filtered careplan records: 2 -> 2
-2025-01-20 17:36:57,758 - INFO - Successfully inserted 2 careplan records
-2025-01-20 17:36:57,763 - INFO - careplan: Attempted=2, Loaded=2
-2025-01-20 17:36:57,763 - INFO - Loading careteam data...
-2025-01-20 17:36:57,767 - INFO - Filtered careteam records: 2 -> 2
-2025-01-20 17:36:57,780 - INFO - Successfully inserted 2 careteam records
-2025-01-20 17:36:57,783 - INFO - careteam: Attempted=2, Loaded=2
-2025-01-20 17:36:57,783 - INFO - Loading immunization data...
-2025-01-20 17:36:57,789 - INFO - Filtered immunization records: 10 -> 10
-2025-01-20 17:36:57,806 - INFO - Successfully inserted 10 immunization records
-2025-01-20 17:36:57,810 - INFO - immunization: Attempted=10, Loaded=10
-2025-01-20 17:36:57,810 - INFO - Loading medicationrequest data...
-2025-01-20 17:36:57,816 - INFO - Filtered medicationrequest records: 1 -> 1
-2025-01-20 17:36:57,820 - INFO - Filtered medicationrequest records: 1 -> 1
-2025-01-20 17:36:57,835 - INFO - Successfully inserted 1 medicationrequest records
-2025-01-20 17:36:57,838 - INFO - medicationrequest: Attempted=1, Loaded=1
-2025-01-20 17:36:57,838 - INFO - 
+2025-01-24 23:46:42,115 - INFO - Starting ETL pipeline with 8 workers
+2025-01-24 23:46:42,260 - INFO - Creating MySQL engine in the main process...
+2025-01-24 23:46:42,292 - INFO - Engine created and connected.
+2025-01-24 23:46:42,293 - INFO - Creating tables with relationships...
+2025-01-24 23:46:42,302 - INFO - Dropping existing tables...
+2025-01-24 23:46:43,141 - INFO - Creating new tables with relationships...
+2025-01-24 23:46:44,430 - INFO - Loading patient data...
+2025-01-24 23:46:44,430 - INFO - Loading 11 patient records.
+2025-01-24 23:46:44,468 - INFO - Successfully inserted 11 patient records
+2025-01-24 23:46:44,473 - INFO - patient: Attempted=11, Loaded=11
+2025-01-24 23:46:44,473 - INFO - Loading encounter data...
+2025-01-24 23:46:44,484 - INFO - Filtered encounter records: 244 -> 244
+2025-01-24 23:46:44,557 - INFO - Successfully inserted 244 encounter records
+2025-01-24 23:46:44,561 - INFO - encounter: Attempted=244, Loaded=244
+2025-01-24 23:46:44,562 - INFO - Loading medical_observation data...
+2025-01-24 23:46:44,578 - INFO - Filtered medical_observation records: 1229 -> 1229
+2025-01-24 23:46:44,585 - INFO - Filtered medical_observation records: 1229 -> 1229
+2025-01-24 23:46:45,113 - INFO - Successfully inserted 1229 medical_observation records
+2025-01-24 23:46:45,118 - INFO - medical_observation: Attempted=1229, Loaded=1229
+2025-01-24 23:46:45,118 - INFO - Loading medical_condition data...
+2025-01-24 23:46:45,124 - INFO - Filtered medical_condition records: 54 -> 54
+2025-01-24 23:46:45,151 - INFO - Successfully inserted 54 medical_condition records
+2025-01-24 23:46:45,154 - INFO - medical_condition: Attempted=54, Loaded=54
+2025-01-24 23:46:45,154 - INFO - Loading medical_procedure data...
+2025-01-24 23:46:45,161 - INFO - Filtered medical_procedure records: 63 -> 63
+2025-01-24 23:46:45,168 - INFO - Filtered medical_procedure records: 63 -> 63
+2025-01-24 23:46:45,199 - INFO - Successfully inserted 63 medical_procedure records
+2025-01-24 23:46:45,202 - INFO - medical_procedure: Attempted=63, Loaded=63
+2025-01-24 23:46:45,203 - INFO - Loading careplan data...
+2025-01-24 23:46:45,208 - INFO - Filtered careplan records: 19 -> 19
+2025-01-24 23:46:45,232 - INFO - Successfully inserted 19 careplan records
+2025-01-24 23:46:45,235 - INFO - careplan: Attempted=19, Loaded=19
+2025-01-24 23:46:45,235 - INFO - Loading careteam data...
+2025-01-24 23:46:45,242 - INFO - Filtered careteam records: 19 -> 19
+2025-01-24 23:46:45,257 - INFO - Successfully inserted 19 careteam records
+2025-01-24 23:46:45,261 - INFO - careteam: Attempted=19, Loaded=19
+2025-01-24 23:46:45,261 - INFO - Loading immunization data...
+2025-01-24 23:46:45,268 - INFO - Filtered immunization records: 143 -> 143
+2025-01-24 23:46:45,316 - INFO - Successfully inserted 143 immunization records
+2025-01-24 23:46:45,319 - INFO - immunization: Attempted=143, Loaded=143
+2025-01-24 23:46:45,319 - INFO - Loading medicationrequest data...
+2025-01-24 23:46:45,326 - INFO - Filtered medicationrequest records: 49 -> 49
+2025-01-24 23:46:45,331 - INFO - Filtered medicationrequest records: 49 -> 49
+2025-01-24 23:46:45,367 - INFO - Successfully inserted 49 medicationrequest records
+2025-01-24 23:46:45,370 - INFO - medicationrequest: Attempted=49, Loaded=49
+2025-01-24 23:46:45,371 - INFO - 
             ETL Pipeline completed:
-            - Duration: 2.65 seconds
-            - Total files processed: 1
-            - Total resources processed: 151
+            - Duration: 3.26 seconds
+            - Total files processed: 11
+            - Total resources processed: 2,513
             - Resources by type:
-              - patient: 1 records
-  - encounter: 14 records
-  - medical_condition: 6 records
-  - medical_observation: 72 records
-  - medical_procedure: 3 records
-  - claim: 15 records
-  - careplan: 2 records
-  - careteam: 2 records
-  - immunization: 10 records
-  - medicationrequest: 1 records
-  - diagnosticreport: 5 records
-  - explanationofbenefit: 14 records
-  - organization: 3 records
-  - practitioner: 3 records
+              - patient: 11 records
+  - encounter: 244 records
+  - medical_condition: 54 records
+  - medical_observation: 1,229 records
+  - medical_procedure: 63 records
+  - claim: 293 records
+  - careplan: 19 records
+  - careteam: 19 records
+  - immunization: 143 records
+  - medicationrequest: 49 records
+  - allergyintolerance: 6 records
+  - device: 1 records
+  - diagnosticreport: 69 records
+  - explanationofbenefit: 244 records
+  - goal: 16 records
+  - imagingstudy: 1 records
+  - organization: 26 records
+  - practitioner: 26 records
             

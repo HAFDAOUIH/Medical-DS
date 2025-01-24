@@ -1,44 +1,46 @@
+/* General Sidenav Container Styling */
 .sidenav-container {
   height: 100%;
   display: flex;
   flex-direction: column;
 }
 
+/* Sidenav Styling */
 .sidenav {
   width: 200px;
+  background-color: #f5f5f5;
+  border-right: 1px solid #ddd;
 }
 
 .sidenav .mat-toolbar {
-  background: inherit;
+  background-color: inherit;
+  font-weight: bold;
+  padding: 16px;
 }
 
+/* Toolbar Styling */
 .mat-toolbar.mat-primary {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
   position: sticky;
   top: 0;
-  z-index: 1;
+  z-index: 1000;
+  height: 64px;
+  padding: 0 16px;
+  box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.1);
 }
 
-mat-sidenav-container {
-  position: relative;
-  height: 100vh; /* Ensure the container takes the full viewport height */
+/* Search Component Placement in Toolbar */
+app-search {
+  flex-grow: 1;
+  margin-left: 16px;
 }
 
+/* Router Outlet Styling */
 mat-sidenav-content {
-  flex: 1;
-  display: flex;
-  flex-direction: column;
-}
-
-mat-toolbar {
-  background-color: #3f51b5; /* You can change the color as needed */
-}
-
-mat-sidenav {
-  top: 0;
-  bottom: 0;
-  position: fixed;
-}
-
-.mat-nav-list a {
-  color: #fff; /* Ensures links are visible */
+  padding: 16px;
+  background-color: #fafafa;
+  overflow: auto;
+  height: 100%;
 }

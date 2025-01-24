@@ -132,6 +132,64 @@ def search_by_patient_name(cursor, name_pattern):
     cursor.execute(query, (name_pattern, name_pattern))
     return cursor.fetchall()
 
+def get_patients(cursor):
+    query = """
+    SELECT 
+        p.id AS patient_id,
+        CONCAT(p.given_name, ' ', p.family_name) AS full_name,
+        p.birth_date,
+        p.gender,
+        p.deceased_datetime,
+        (SELECT COUNT(*) FROM encounter e WHERE e.patient_reference = p.id) AS encounter_count,
+        (SELECT COUNT(*) FROM medical_condition mc WHERE mc.patient_reference = p.id) AS condition_count,
+        (SELECT COUNT(*) FROM medical_observation mo WHERE mo.patient_reference = p.id) AS observation_count,
+        (SELECT COUNT(*) FROM medicationrequest mr WHERE mr.patient_reference = p.id) AS request_count,
+        (SELECT COUNT(*) FROM medical_procedure mp WHERE mp.patient_reference = p.id) AS procedure_count,
+        (SELECT COUNT(*) FROM immunization im WHERE im.patient_reference = p.id) AS immunization_count,
+        (SELECT COUNT(*) FROM careplan cp WHERE cp.patient_reference = p.id) AS careplan_count
+    FROM 
+        patient p
+    """
+    # Use the same pattern for both given_name and family_name
+    cursor.execute(query)
+    return cursor.fetchall()
+
+@app.route('/patients',methods=['GET'])
+def getAllPatients():
+    mysql_url = request.args.get('mysql_url')
+    if not mysql_url:
+        return jsonify({"error": "MySQL URL must be provided as a query parameter."}), 400
+    connection = None
+    try:
+        # Parse the database URL to extract connection details
+        url_parts = mysql_url.split('@')
+        user_pass = url_parts[0].split('//')[1]
+        user = user_pass.split(':')[0]
+        db = url_parts[1].split('/')[-1]
+
+        # Connect to the database
+        connection = pymysql.connect(
+            host='127.0.0.1',
+            user=user,
+            password='',
+            database=db,
+        )
+
+        with connection.cursor(pymysql.cursors.DictCursor) as cursor:
+            # Search by patient ID
+            patient_data = get_patients(cursor)
+            if not patient_data:
+                return jsonify({"error": "Patients not found."}), 404
+        
+        return jsonify(patient_data), 200
+
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
+
+    finally:
+        if connection:
+            connection.close()
+
 
 @app.route('/search_patient', methods=['GET'])
 def search_patient_emr():
