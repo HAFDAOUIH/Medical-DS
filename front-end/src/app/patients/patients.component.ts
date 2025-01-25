@@ -8,6 +8,7 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatIconModule } from '@angular/material/icon';
 import {MatTableModule} from '@angular/material/table'; 
 import { MatButtonModule } from '@angular/material/button';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-patients',
@@ -32,10 +33,11 @@ export class PatientsComponent implements OnInit {
     'request_count',
     'procedure_count',
     'immunization_count',
-    'careplan_count'
+    'careplan_count',
+    'actions'
   ]; // Table columns
 
-  constructor(private medicalRecordService: MedicalRecordService) {}
+  constructor(private medicalRecordService: MedicalRecordService,private router: Router) {}
 
   ngOnInit() {
     // Fetch all patients and initialize filtering
@@ -55,6 +57,9 @@ export class PatientsComponent implements OnInit {
         )
       );
     });
+  }
+  viewPatientEMR(patientId: number) {
+    this.router.navigate(['/patients', patientId]); // Navigate to the patient details route
   }
 }
 

@@ -31,11 +31,7 @@
   box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.1);
 }
 
-/* Search Component Placement in Toolbar */
-app-search {
-  flex-grow: 1;
-  margin-left: 16px;
-}
+
 
 /* Router Outlet Styling */
 mat-sidenav-content {

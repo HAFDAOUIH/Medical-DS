@@ -73,6 +73,15 @@
         <th mat-header-cell *matHeaderCellDef> Care Plans </th>
         <td mat-cell *matCellDef="let patient"> {{ patient.careplan_count }} </td>
       </ng-container>
+
+      <ng-container matColumnDef="actions">
+        <th mat-header-cell *matHeaderCellDef> Actions </th>
+        <td mat-cell *matCellDef="let patient">
+          <button mat-button (click)="viewPatientEMR(patient.patient_id)">
+            View Details
+          </button>
+        </td>
+      </ng-container>
   
       <!-- Header and Row Definitions -->
       <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
