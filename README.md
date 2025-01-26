@@ -1,19 +1,10 @@
-# Healthcare ETL
+# Medical Data Sapace Project 
+
+## Healthcare ETL
 
 A Python-based ETL pipeline for processing FHIR JSON files and loading them into a MySQL database. Includes validation scripts and basic data exploration utilities.
 
-## Table of Contents
-- [Overview](#overview)
-- [Requirements](#requirements)
-- [Installation](#installation)
-- [Usage](#usage)
-- [Validation](#validation)
-- [MySQL Setup](#mysql-setup)
-- [Troubleshooting](#troubleshooting)
-- [Contributing](#contributing)
-- [License](#license)
-
-## Overview
+### Overview
 
 This repository contains:
 
@@ -28,13 +19,13 @@ This repository contains:
 - `fhir/`: Directory with source JSON files (not always included or may be stored via Git LFS)
 - `processed_data/`: Directory with CSV outputs (if configured), or large .json resources
 
-## Requirements
+### Requirements
 
 - Python 3.8+ (or a similar version)
 - MySQL server (if you want to load data into a MySQL database)
 - pip or conda for installing Python dependencies
 
-## Installation
+### Installation
 
 1. Clone this repository:
 ```bash
@@ -46,11 +37,11 @@ cd Medical-DS
 ```bash
 # If using pip
 pip install -r requirements.txt
+```
 
+### Usage
 
-## Usage
-
-### 1. Run the ETL
+#### 1. Run the ETL
 
 By default, the ETL expects a directory of .json FHIR files (e.g. `fhir/`) and a MySQL URL:
 
@@ -80,7 +71,7 @@ ETL Pipeline completed:
  - Total resources processed: M
 ```
 
-### 2. Validate the Results
+#### 2. Validate the Results
 
 After the ETL finishes, you can run:
 
@@ -110,7 +101,7 @@ RESOURCE:
   - Data completeness: 93%
 ```
 
-## MySQL Setup
+### MySQL Setup
 
 1. Start MySQL server (on Ubuntu):
 ```bash
@@ -138,72 +129,140 @@ SHOW TABLES;
 
 When you run the ETL, it will automatically create tables named after each FHIR resource (e.g., patient, encounter, observation) and insert the data.
 
-## Test the API : 
-
-### API Description
+## API Docs
 
 This API provides endpoints to upload files for ETL (Extract, Transform, Load) processing and retrieve Electronic Medical Records (EMR) data for a specific patient.
 
-#### Endpoints:
+### Endpoints:
 
-1. **POST /upload**:
-   - This endpoint allows the user to upload files or a folder for ETL processing.
-   - **Parameters**:
-     - `files`: A list of files (JSON, XML, CSV) to be uploaded.
-     - `folder`: (Optional) A folder containing files to be uploaded.
-     - `mysql_url`: The MySQL connection URL for storing the processed data (required).
-   - **Process**:
-     - The API processes the uploaded files or the files within the provided folder, applies the ETL pipeline, and stores the results in the specified MySQL database (`healthcare_db`).
-     - Valid file types include JSON, XML, and CSV.
-   - **Response**:
-     - Returns a success message if the files are processed successfully.
-     - Returns an error message if no valid files are found, if the folder path is invalid, or if there is any issue during the ETL process.
+#### General
 
-2. **GET /emr/<patient_id>**:
-   - This endpoint retrieves a patient's EMR data from the MySQL database.
-   - **Parameters**:
-     - `patient_id`: The unique identifier for the patient whose EMR data is to be retrieved.
-     - `mysql_url`: The MySQL connection URL to connect to the database (required).
-   - **Process**:
-     - The API fetches the patient's data from the `patient` table in the `healthcare_db` MySQL database based on the provided `patient_id`.
-     - Returns the patient's information if found.
-     - If the patient is not found, an error message is returned.
-   - **Response**:
-     - A JSON object containing the patient's EMR data if found.
-     - An error message if the patient is not found or if there are issues with the database connection.
+- **`/upload`**  
+  Upload a folder or files.
+  
+- **`/patients`**  
+  Retrieve all patients.
 
-#### Run the API :
+- **`/search_patient`**  
+  Search for a patient by their `PATIENT_ID` or name.
+
+#### Encounters
+
+- **`/get_user_encounters`**  
+  Get all encounters for a user by their `PATIENT_ID`.
+  
+- **`/get_encounter_details`**  
+  Get encounter details by the encounter ID.
+
+#### Observations
+
+- **`/observations/patient`**  
+  Retrieve all observations for a user by their `PATIENT_ID`.
+
+#### Immunizations
+
+- **`/immunizations/patient`**  
+  Retrieve all immunizations for a user by their `PATIENT_ID`.
+
+#### Medical Conditions
+
+- **`/conditions/patient`**  
+  Retrieve all conditions for a user by their `PATIENT_ID`.
+
+#### Medication Requests
+
+- **`/medication-requests/patient`**  
+  Retrieve all medication requests for a user by their `PATIENT_ID`.
+
+#### Care Plans
+
+- **`/careplans/patient`**  
+  Retrieve all care plans for a user by their `PATIENT_ID`.
+
+---
+
+### Testing the API
+
+** Warning: ** you must specify a database to store the files
+
+Open other Terminal and test the API :
+
+#### Upload
+
+```bash
+curl -X POST http://127.0.0.1:5000/upload \
+-F "folder=fhir_test" \
+-F "mysql_url=mysql+pymysql://root@localhost:3306/healthcare_db"
+
+curl -X POST http://127.0.0.1:5000/upload \
+-F "files=@Ross213_Bayer639_d084de98-b1f8-4b37-a91a-e6c5cc3e5d20.json" \
+-F "files=@Sina65_Wolff180_582b89e2-30d8-44fb-bb96-03957b2ec7c2.json" \
+-F "mysql_url=mysql+pymysql://root@localhost:3306/healthcare_db"
+```
+
+#### Patients
+
+```bash
+curl -X GET "http://127.0.0.1:5000/patients?mysql_url=mysql+pymysql://root@localhost:3306/healthcare_db"
+```
+
+#### Search Patient
+
+```bash
+curl -X GET "http://127.0.0.1:5000/search_patient?mysql_url=mysql+pymysql://root@localhost:3306/healthcare_db&name=Connelly992"
+
+curl -X GET "http://127.0.0.1:5000/search_patient?mysql_url=mysql+pymysql://root@localhost:3306/healthcare_db&PATIENT_ID=b171a869-6781-4902-963e-2c6f02b6a3a4"
+```
+
+#### User Encounters
+
+```bash
+curl -X GET "http://127.0.0.1:5000/get_user_encounters?mysql_url=mysql+pymysql://root@localhost:3306/healthcare_db&PATIENT_ID=b171a869-6781-4902-963e-2c6f02b6a3a4"
+```
+
+#### Encounter Details
+
+```bash
+curl -X GET "http://127.0.0.1:5000/get_encounter_details?mysql_url=mysql+pymysql://root@localhost:3306/healthcare_db&encounter_id=cf366dba-2ddb-4d68-9e02-f11e4a6f363e"
+```
+
+#### Observations
+
+```bash
+curl -X GET "http://127.0.0.1:5000/observations/patient?mysql_url=mysql+pymysql://root@localhost:3306/healthcare_db&PATIENT_ID=b171a869-6781-4902-963e-2c6f02b6a3a4"
+```
+
+#### Immunizations
+
+```bash
+curl -X GET "http://127.0.0.1:5000/immunizations/patient?mysql_url=mysql+pymysql://root@localhost:3306/healthcare_db&PATIENT_ID=b171a869-6781-4902-963e-2c6f02b6a3a4"
+```
+
+#### Medical Conditions
+
+```bash
+curl -X GET "http://127.0.0.1:5000/conditions/patient?mysql_url=mysql+pymysql://root@localhost:3306/healthcare_db&PATIENT_ID=b171a869-6781-4902-963e-2c6f02b6a3a4"
+```
+
+#### Medication Requests
+
+```bash
+curl -X GET "http://127.0.0.1:5000/medication-requests/patient?mysql_url=mysql+pymysql://root@localhost:3306/healthcare_db&PATIENT_ID=b171a869-6781-4902-963e-2c6f02b6a3a4"
+```
+
+#### Care Plans
+
+```bash
+curl -X GET "http://127.0.0.1:5000/careplans/patient?mysql_url=mysql+pymysql://root@localhost:3306/healthcare_db&PATIENT_ID=b171a869-6781-4902-963e-2c6f02b6a3a4"
+```
+
+### Run the API
 
 navigate to bbackend folder first, then run this cmd in the terminal :
 
 ```bash
 python3 api.py
 ```
-
-#### Example Usage:
-
-Open other Terminal and test the API :
-
-** Warning: ** you must specify a database to store the files
-
-**Upload Files**:
-
-1. Upload a folder for ETL processing:
-   ```bash
-   curl -X POST http://127.0.0.1:5000/upload -F "folder=test_folder" -F "mysql_url=mysql+pymysql://root@localhost:3306/healthcare_db"
-   ```
-
-2. Upload multiple files for ETL processing:
-   ```bash
-   curl -X POST http://127.0.0.1:5000/upload -F "files=@Ross213_Bayer639_d084de98-b1f8-4b37-a91a-e6c5cc3e5d20.json" -F"files=@Sina65_Wolff180_582b89e2-30d8-44fb-bb96-03957b2ec7c2.json" -F "mysql_url=mysql+pymysql://root@localhost:3306/healthcare_db"
-   ```
-
-**Get Patient EMR**:
-
-1. Retrieve a patient's EMR data:
-   ```bash
-   curl -X GET "http://127.0.0.1:5000/emr/eac150b8-3c32-4a24-b5da-e39d7dee588e?mysql_url=mysql+pymysql://root@localhost:3306/healthcare_db"
-   ```
 
 #### Configuration:
 
@@ -222,7 +281,7 @@ Open other Terminal and test the API :
 
 This API helps automate the ETL process for healthcare data and facilitates the retrieval of medical records for specific patients stored in a MySQL database.
 
-## Troubleshooting
+### Troubleshooting
 
 - **No module named 'pymysql'**:
   - Make sure you've run `pip install -r requirements.txt` to install pymysql and other dependencies
@@ -239,13 +298,3 @@ This API helps automate the ETL process for healthcare data and facilitates the 
 
 - **Can't run script (Permission denied)**:
   - Use `python3 <filename>` or `chmod +x healthcare_etl.py` then `./healthcare_etl.py ...`
-
-## Contributing
-
-1. Fork this repo and create a feature branch
-2. Make changes and add tests or documentation
-3. Submit a pull request for review
-
-## License
-
-MIT License or whichever you prefer. (Include your chosen license text.)
