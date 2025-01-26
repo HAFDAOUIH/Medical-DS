@@ -154,6 +154,78 @@ def get_patients(cursor):
     cursor.execute(query)
     return cursor.fetchall()
 
+def get_dashboard_data(cursor):
+    dashboard_data = {}
+
+    # Immunization Coverage Rate
+    cursor.execute("""
+        SELECT 
+            ROUND(
+                (COUNT(DISTINCT patient_reference) * 100.0) / 
+                (SELECT COUNT(*) FROM patient), 2
+            ) AS immunization_rate
+        FROM 
+            immunization
+        WHERE 
+            status = 'completed';
+    """)
+    dashboard_data['immunization_rate'] = cursor.fetchone()['immunization_rate']
+
+    # Count of Each `code_text` and Its Prevalence
+    cursor.execute("""
+        SELECT 
+            code_text,
+            COUNT(DISTINCT patient_reference) AS condition_count,
+            ROUND(
+                (COUNT(DISTINCT patient_reference) * 100.0) / 
+                (SELECT COUNT(*) FROM patient), 2
+            ) AS prevalence_percentage
+        FROM 
+            medical_condition
+        GROUP BY 
+            code_text
+        ORDER BY 
+            condition_count DESC;
+    """)
+    dashboard_data['conditions_prevalence'] = cursor.fetchall()
+
+    return dashboard_data
+
+@app.route('/dashboard', methods=['GET'])
+def get_dashboard():
+    mysql_url = request.args.get('mysql_url')
+    if not mysql_url:
+        return jsonify({"error": "MySQL URL must be provided as a query parameter."}), 400
+
+    connection = None
+    try:
+        url_parts = mysql_url.split('@')
+        user_pass = url_parts[0].split('//')[1]
+        user = user_pass.split(':')[0]
+        db = url_parts[1].split('/')[-1]
+
+        # Connect to the database
+        connection = pymysql.connect(
+            host='127.0.0.1',
+            user=user,
+            password='',
+            database=db,
+            cursorclass=pymysql.cursors.DictCursor
+        )
+
+        with connection.cursor() as cursor:
+            # Retrieve dashboard data
+            dashboard_data = get_dashboard_data(cursor)
+
+        return jsonify(dashboard_data), 200
+
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
+
+    finally:
+        if connection:
+            connection.close()
+
 @app.route('/patients',methods=['GET'])
 def getAllPatients():
     mysql_url = request.args.get('mysql_url')

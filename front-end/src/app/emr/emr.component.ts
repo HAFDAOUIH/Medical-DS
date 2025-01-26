@@ -5,11 +5,12 @@ import { CommonModule } from '@angular/common';
 import { MatTableModule } from '@angular/material/table';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
+import {MatExpansionModule} from '@angular/material/expansion';
 
 @Component({
   selector: 'app-emr',
   standalone: true,
-  imports: [CommonModule,MatTableModule,MatButtonModule,MatIconModule],
+  imports: [CommonModule,MatTableModule,MatButtonModule,MatIconModule,MatExpansionModule],
   templateUrl: './emr.component.html',
   styleUrl: './emr.component.css'
 })
