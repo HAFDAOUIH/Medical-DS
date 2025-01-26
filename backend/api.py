@@ -465,5 +465,316 @@ def get_encounter_details():
             connection.close()
 
 
+def get_observations_by_patient_id(cursor, patient_id):
+    """ Fetch all observations for a given patient by their ID """
+
+    query = """
+        SELECT 
+            mo.id AS observation_id,
+            mo.encounter_reference,
+            mo.effective_datetime,
+            mo.issued,
+            mo.value_quantity,
+            mo.value_unit,
+            mo.value_code,
+            mo.status
+        FROM 
+            medical_observation mo
+        WHERE 
+            mo.patient_reference = %s;
+    """
+    cursor.execute(query, (patient_id,))
+    return cursor.fetchall()
+
+
+def get_immunizations_by_patient_id(cursor, patient_id):
+    """
+    Fetch all immunizations for a given patient by their ID.
+    """
+    query = """
+    SELECT 
+        id AS immunization_id,
+        patient_reference,
+        status,
+        vaccine_code,
+        occurrence_date,
+        primary_source
+    FROM 
+        immunization
+    WHERE 
+        patient_reference = %s;
+    """
+    cursor.execute(query, (patient_id,))
+    return cursor.fetchall()
+
+
+def get_careplans_by_patient_id(cursor, patient_id):
+    """
+    Fetch all care plans for a given patient by their ID.
+    """
+    query = """
+    SELECT 
+        id AS careplan_id,
+        patient_reference,
+        status,
+        intent,
+        title,
+        description,
+        category_code,
+        start_date,
+        end_date
+    FROM 
+        careplan
+    WHERE 
+        patient_reference = %s;
+    """
+    cursor.execute(query, (patient_id,))
+    return cursor.fetchall()
+
+
+def get_medical_conditions_by_patient_id(cursor, patient_id):
+    """
+    Fetch all medical conditions for a given patient by their ID.
+    """
+    query = """
+    SELECT 
+        id AS condition_id,
+        patient_reference,
+        code_text,
+        onset_datetime,
+        abatement_datetime,
+        recorded_date,
+        verification_status
+    FROM 
+        medical_condition
+    WHERE 
+        patient_reference = %s;
+    """
+    cursor.execute(query, (patient_id,))
+    return cursor.fetchall()
+
+
+def get_medication_requests_by_patient_id(cursor, patient_id):
+    """
+    Fetch all medication requests for a given patient by their ID.
+    """
+    query = """
+    SELECT 
+        id AS request_id,
+        patient_reference,
+        encounter_reference,
+        status,
+        intent,
+        medication_code,
+        authored_on
+    FROM 
+        medicationrequest
+    WHERE 
+        patient_reference = %s;
+    """
+    cursor.execute(query, (patient_id,))
+    return cursor.fetchall()
+
+
+@app.route('/observations/patient', methods=['GET'])
+def get_patient_observations():
+    mysql_url = request.args.get('mysql_url')
+    patient_id = request.args.get('patient_id')
+
+    if not mysql_url:
+        return jsonify({"error": "MySQL URL must be provided as a query parameter."}), 400
+
+    if not patient_id:
+        return jsonify({"error": "'patient_id' must be provided as a query parameter."}), 400
+
+    connection = None
+    try:
+        url_parts = mysql_url.split('@')
+        user_pass = url_parts[0].split('//')[1]
+        user = user_pass.split(':')[0]
+        db = url_parts[1].split('/')[-1]
+
+        connection = pymysql.connect(
+            host='127.0.0.1',
+            user=user,
+            password='',
+            database=db,
+        )
+
+        with connection.cursor(pymysql.cursors.DictCursor) as cursor:
+            observations_data = get_observations_by_patient_id(cursor, patient_id)
+            if not observations_data :
+                    return jsonify({"error": "Patient observations not found."}), 404
+
+        return jsonify(observations_data), 200
+
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
+
+    finally:
+        if connection:
+            connection.close()
+
+
+@app.route('/immunizations/patient', methods=['GET'])
+def get_patient_immunizations():
+    mysql_url = request.args.get('mysql_url')
+    patient_id = request.args.get('patient_id')
+
+    if not mysql_url:
+        return jsonify({"error": "MySQL URL must be provided as a query parameter."}), 400
+
+    if not patient_id:
+        return jsonify({"error": "'patient_id' must be provided as a query parameter."}), 400
+
+    connection = None
+    try:
+        url_parts = mysql_url.split('@')
+        user_pass = url_parts[0].split('//')[1]
+        user = user_pass.split(':')[0]
+        db = url_parts[1].split('/')[-1]
+
+        connection = pymysql.connect(
+            host='127.0.0.1',
+            user=user,
+            password='',
+            database=db,
+        )
+
+        with connection.cursor(pymysql.cursors.DictCursor) as cursor:
+            immunizations_data = get_immunizations_by_patient_id(cursor, patient_id)
+            if not immunizations_data :
+                    return jsonify({"error": "Patient immunizations not found."}), 404
+
+        return jsonify(immunizations_data), 200
+
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
+
+    finally:
+        if connection:
+            connection.close()
+
+
+@app.route('/conditions/patient', methods=['GET'])
+def get_patient_conditions():
+    mysql_url = request.args.get('mysql_url')
+    patient_id = request.args.get('patient_id')
+
+    if not mysql_url:
+        return jsonify({"error": "MySQL URL must be provided as a query parameter."}), 400
+
+    if not patient_id:
+        return jsonify({"error": "'patient_id' must be provided as a query parameter."}), 400
+
+    connection = None
+    try:
+        url_parts = mysql_url.split('@')
+        user_pass = url_parts[0].split('//')[1]
+        user = user_pass.split(':')[0]
+        db = url_parts[1].split('/')[-1]
+
+        connection = pymysql.connect(
+            host='127.0.0.1',
+            user=user,
+            password='',
+            database=db,
+        )
+
+        with connection.cursor(pymysql.cursors.DictCursor) as cursor:
+            conditions_data = get_medical_conditions_by_patient_id(cursor, patient_id)
+            if not conditions_data :
+                    return jsonify({"error": "Patient conditions not found."}), 404
+
+        return jsonify(conditions_data), 200
+
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
+
+    finally:
+        if connection:
+            connection.close()
+
+
+@app.route('/medication-requests/patient', methods=['GET'])
+def get_patient_medication_requests():
+    mysql_url = request.args.get('mysql_url')
+    patient_id = request.args.get('patient_id')
+
+    if not mysql_url:
+        return jsonify({"error": "MySQL URL must be provided as a query parameter."}), 400
+
+    if not patient_id:
+        return jsonify({"error": "'patient_id' must be provided as a query parameter."}), 400
+
+    connection = None
+    try:
+        url_parts = mysql_url.split('@')
+        user_pass = url_parts[0].split('//')[1]
+        user = user_pass.split(':')[0]
+        db = url_parts[1].split('/')[-1]
+
+        connection = pymysql.connect(
+            host='127.0.0.1',
+            user=user,
+            password='',
+            database=db,
+        )
+
+        with connection.cursor(pymysql.cursors.DictCursor) as cursor:
+            medication_requests_data = get_medication_requests_by_patient_id(cursor, patient_id)
+            if not medication_requests_data :
+                    return jsonify({"error": "Patient medication requests not found."}), 404
+
+        return jsonify(medication_requests_data), 200
+
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
+
+    finally:
+        if connection:
+            connection.close()
+
+
+@app.route('/careplans/patient', methods=['GET'])
+def get_patient_careplans():
+    mysql_url = request.args.get('mysql_url')
+    patient_id = request.args.get('patient_id')
+
+    if not mysql_url:
+        return jsonify({"error": "MySQL URL must be provided as a query parameter."}), 400
+
+    if not patient_id:
+        return jsonify({"error": "'patient_id' must be provided as a query parameter."}), 400
+
+    connection = None
+    try:
+        url_parts = mysql_url.split('@')
+        user_pass = url_parts[0].split('//')[1]
+        user = user_pass.split(':')[0]
+        db = url_parts[1].split('/')[-1]
+
+        connection = pymysql.connect(
+            host='127.0.0.1',
+            user=user,
+            password='',
+            database=db,
+        )
+
+        with connection.cursor(pymysql.cursors.DictCursor) as cursor:
+            careplans_data = get_careplans_by_patient_id(cursor, patient_id)
+            if not careplans_data :
+                    return jsonify({"error": "Patient careplans not found."}), 404
+
+        return jsonify(careplans_data), 200
+
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
+
+    finally:
+        if connection:
+            connection.close()
+
+
 if __name__ == '__main__':
     app.run(debug=True)
