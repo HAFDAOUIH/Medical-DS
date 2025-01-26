@@ -2,74 +2,137 @@
     <!-- Patient Information -->
     <section class="patient-info">
       <h2>Patient Information</h2>
-      <p><strong>ID:</strong> {{ patient?.patient_id }}</p>
-      <p><strong>Full Name:</strong> {{ patient?.full_name }}</p>
-      <p><strong>Birth Date:</strong> {{ patient?.birth_date }}</p>
-      <p><strong>Gender:</strong> {{ patient?.gender }}</p>
-      <p><strong>Encounters:</strong> {{ patient?.encounter_count }}</p>
-      <p><strong>Conditions:</strong> {{ patient?.condition_count }}</p>
-      <p><strong>Observations:</strong> {{ patient?.observation_count }}</p>
-      <p><strong>Medication Requests:</strong> {{ patient?.request_count }}</p>
-      <p><strong>Procedures:</strong> {{ patient?.procedure_count }}</p>
-      <p><strong>Immunizations:</strong> {{ patient?.immunization_count }}</p>
-      <p><strong>Care Plans:</strong> {{ patient?.careplan_count }}</p>
+      <table>
+        <tr><td><strong>ID:</strong></td><td>{{ patient?.patient_id }}</td></tr>
+        <tr><td><strong>Full Name:</strong></td><td>{{ patient?.full_name }}</td></tr>
+        <tr><td><strong>Birth Date:</strong></td><td>{{ patient?.birth_date }}</td></tr>
+        <tr><td><strong>Gender:</strong></td><td>{{ patient?.gender }}</td></tr>
+        <tr><td><strong>Encounters:</strong></td><td>{{ patient?.encounter_count }}</td></tr>
+        <tr><td><strong>Conditions:</strong></td><td>{{ conditions?.length }}</td></tr>
+        <tr><td><strong>Observations:</strong></td><td>{{ observations?.length }}</td></tr>
+        <tr><td><strong>Medication Requests:</strong></td><td>{{ medicationRequests?.length }}</td></tr>
+        <tr><td><strong>Immunizations:</strong></td><td>{{ immunizations?.length }}</td></tr>
+        <tr><td><strong>Care Plans:</strong></td><td>{{ carePlans?.length }}</td></tr>
+      </table>
     </section>
   
-    <!-- Expansion Panel for Encounters -->
+    <!-- Expansion Panels -->
     <mat-accordion>
+      <!-- Encounters -->
       <mat-expansion-panel>
         <mat-expansion-panel-header>
           <mat-panel-title>Encounters</mat-panel-title>
         </mat-expansion-panel-header>
-  
-        <table mat-table [dataSource]="encounters" class="mat-elevation-z8">
-          <ng-container matColumnDef="encounter_id">
-            <th mat-header-cell *matHeaderCellDef>Encounter ID</th>
-            <td mat-cell *matCellDef="let encounter">{{ encounter.encounter_id }}</td>
-          </ng-container>
-  
-          <ng-container matColumnDef="start_date">
-            <th mat-header-cell *matHeaderCellDef>Start Date</th>
-            <td mat-cell *matCellDef="let encounter">{{ encounter.start_date }}</td>
-          </ng-container>
-  
-          <ng-container matColumnDef="end_date">
-            <th mat-header-cell *matHeaderCellDef>End Date</th>
-            <td mat-cell *matCellDef="let encounter">{{ encounter.end_date }}</td>
-          </ng-container>
-  
-          <ng-container matColumnDef="status">
-            <th mat-header-cell *matHeaderCellDef>Status</th>
-            <td mat-cell *matCellDef="let encounter">{{ encounter.status }}</td>
-          </ng-container>
-  
-          <ng-container matColumnDef="actions">
-            <th mat-header-cell *matHeaderCellDef>Actions</th>
-            <td mat-cell *matCellDef="let encounter">
-              <button mat-button (click)="viewEncounterDetails(encounter.encounter_id)">
-                View Details
-              </button>
-            </td>
-          </ng-container>
-  
-          <tr mat-header-row *matHeaderRowDef="['encounter_id', 'start_date', 'end_date', 'status', 'actions']"></tr>
-          <tr mat-row *matRowDef="let row; columns: ['encounter_id', 'start_date', 'end_date', 'status', 'actions']"></tr>
+        <table>
+          <thead>
+            <tr>
+              <th>Encounter ID</th>
+              <th>Start Date</th>
+              <th>End Date</th>
+              <th>Status</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let encounter of encounters">
+              <td>{{ encounter.encounter_id }}</td>
+              <td>{{ encounter.start_date }}</td>
+              <td>{{ encounter.end_date }}</td>
+              <td>{{ encounter.status }}</td>
+              <td>
+                <button (click)="viewEncounterDetails(encounter.encounter_id)">View Details</button>
+              </td>
+            </tr>
+          </tbody>
         </table>
       </mat-expansion-panel>
   
-      <!-- Expansion Panel for Encounter Details -->
-      <mat-expansion-panel *ngIf="encounterDetails">
+      <!-- Observations -->
+      <mat-expansion-panel>
         <mat-expansion-panel-header>
-          <mat-panel-title>Encounter Details</mat-panel-title>
+          <mat-panel-title>Observations</mat-panel-title>
         </mat-expansion-panel-header>
+        <table>
+          <thead>
+            <tr>
+              <th>Value Quantity</th>
+              <th>Unit</th>
+              <th>Date/Time</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let observation of observations">
+              <td>{{ observation.value_quantity }}</td>
+              <td>{{ observation.value_unit }}</td>
+              <td>{{ observation.effective_datetime }}</td>
+            </tr>
+          </tbody>
+        </table>
+      </mat-expansion-panel>
   
-        <p><strong>ID:</strong> {{ encounterDetails?.encounter_id }}</p>
-        <p><strong>Start Date:</strong> {{ encounterDetails?.start_date }}</p>
-        <p><strong>End Date:</strong> {{ encounterDetails?.end_date }}</p>
-        <p><strong>Status:</strong> {{ encounterDetails?.status }}</p>
-        <p><strong>Observations:</strong> {{ encounterDetails?.observation_count }}</p>
-        <p><strong>Medication Requests:</strong> {{ encounterDetails?.request_count }}</p>
-        <p><strong>Procedures:</strong> {{ encounterDetails?.procedure_count }}</p>
+      <!-- Immunizations -->
+      <mat-expansion-panel>
+        <mat-expansion-panel-header>
+          <mat-panel-title>Immunizations</mat-panel-title>
+        </mat-expansion-panel-header>
+        <table>
+          <thead>
+            <tr>
+              <th>Vaccine</th>
+              <th>Date</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let immunization of immunizations">
+              <td>{{ immunization.vaccine_code }}</td>
+              <td>{{ immunization.occurrence_date }}</td>
+            </tr>
+          </tbody>
+        </table>
+      </mat-expansion-panel>
+  
+      <!-- Conditions -->
+      <mat-expansion-panel>
+        <mat-expansion-panel-header>
+          <mat-panel-title>Conditions</mat-panel-title>
+        </mat-expansion-panel-header>
+        <table>
+          <thead>
+            <tr>
+              <th>Condition</th>
+              <th>Onset Date</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let condition of conditions">
+              <td>{{ condition.code_text }}</td>
+              <td>{{ condition.onset_datetime }}</td>
+            </tr>
+          </tbody>
+        </table>
+      </mat-expansion-panel>
+  
+      <!-- Care Plans -->
+      <mat-expansion-panel>
+        <mat-expansion-panel-header>
+          <mat-panel-title>Care Plans</mat-panel-title>
+        </mat-expansion-panel-header>
+        <table>
+          <thead>
+            <tr>
+              <th>Title</th>
+              <th>Start Date</th>
+              <th>End Date</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let carePlan of carePlans">
+              <td>{{ carePlan.title }}</td>
+              <td>{{ carePlan.start_date }}</td>
+              <td>{{ carePlan.end_date }}</td>
+            </tr>
+          </tbody>
+        </table>
       </mat-expansion-panel>
     </mat-accordion>
   </div>

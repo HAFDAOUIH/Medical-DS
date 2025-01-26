@@ -26,6 +26,87 @@ export class MedicalRecordService {
   getMySqlUrl(): string {
     return this.mysqlUrl;
   }
+  getUserEncounters(patientId: string): Observable<any> {
+    this.validateMySqlUrl();
+
+    const url = `${this.baseUrl}/get_user_encounters`;
+    const params = new HttpParams()
+      .set('mysql_url', this.mysqlUrl)
+      .set('patient_id', patientId);
+
+    return this.http.get(url, { params });
+  }
+
+  getEncounterDetails(encounterId: string): Observable<any> {
+    this.validateMySqlUrl();
+
+    const url = `${this.baseUrl}/get_encounter_details`;
+    const params = new HttpParams()
+      .set('mysql_url', this.mysqlUrl)
+      .set('encounter_id', encounterId);
+
+    return this.http.get(url, { params });
+  }
+
+  getPatientObservations(patientId: string): Observable<any> {
+    this.validateMySqlUrl();
+
+    const url = `${this.baseUrl}/observations/patient`;
+    const params = new HttpParams()
+      .set('mysql_url', this.mysqlUrl)
+      .set('patient_id', patientId);
+
+    return this.http.get(url, { params });
+  }
+
+  getPatientImmunizations(patientId: string): Observable<any> {
+    this.validateMySqlUrl();
+
+    const url = `${this.baseUrl}/immunizations/patient`;
+    const params = new HttpParams()
+      .set('mysql_url', this.mysqlUrl)
+      .set('patient_id', patientId);
+
+    return this.http.get(url, { params });
+  }
+  private validateMySqlUrl(): void {
+    if (!this.mysqlUrl) {
+      throw new Error('MySQL URL is not set');
+    }
+  }
+
+  getPatientConditions(patientId: string): Observable<any> {
+    this.validateMySqlUrl();
+
+    const url = `${this.baseUrl}/conditions/patient`;
+    const params = new HttpParams()
+      .set('mysql_url', this.mysqlUrl)
+      .set('patient_id', patientId);
+
+    return this.http.get(url, { params });
+  }
+
+  getPatientMedicationRequests(patientId: string): Observable<any> {
+    this.validateMySqlUrl();
+
+    const url = `${this.baseUrl}/medication-requests/patient`;
+    const params = new HttpParams()
+      .set('mysql_url', this.mysqlUrl)
+      .set('patient_id', patientId);
+
+    return this.http.get(url, { params });
+  }
+
+  getPatientCareplans(patientId: string): Observable<any> {
+    this.validateMySqlUrl();
+
+    const url = `${this.baseUrl}/careplans/patient`;
+    const params = new HttpParams()
+      .set('mysql_url', this.mysqlUrl)
+      .set('patient_id', patientId);
+
+    return this.http.get(url, { params });
+  }
 /**
    * Fetch dashboard data from the backend.
    * @returns Observable of the dashboard data.
@@ -127,16 +208,5 @@ getDashboardData(): Observable<any> {
    * @param encounterId The ID of the encounter.
    * @returns Observable with the encounter details.
    */
-  getEncounterDetails(encounterId: string): Observable<any> {
-    if (!this.mysqlUrl) {
-      throw new Error('MySQL URL is not set');
-    }
-
-    const url = `${this.baseUrl}/get_encounter_details`;
-    const params = new HttpParams()
-      .set('mysql_url', this.mysqlUrl)
-      .set('encounter_id', encounterId);
-
-    return this.http.get(url, { params });
-  }
+  
 }
