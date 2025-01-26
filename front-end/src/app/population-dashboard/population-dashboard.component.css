@@ -1,6 +1,62 @@
-canvas {
-    width: 50% !important; /* Ensures the chart takes up the full width of the container */
-    height: auto !important; /* Sets a fixed height for all charts */
-    align-self: center;
+/* Basic Reset */
+body, html {
+    margin: 0;
+    padding: 0;
+    font-family: Arial, sans-serif;
+    background-color: #f4f5f7;
+    color: #333;
+  }
+  
+  /* Dashboard Container */
+  .dashboard-container {
+    padding: 20px;
+    max-width: 1200px;
+    margin: 0 auto;
+  }
+  
+  /* Title */
+  .dashboard-title {
+    font-size: 2rem;
+    text-align: center;
+    margin-bottom: 30px;
+    color: #2c3e50;
+  }
+  
+  /* Chart Section */
+  .chart-section {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+    gap: 20px;
+  }
+  
+  /* Chart Container */
+  .chart-container {
+    background: #ffffff;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    padding: 20px;
+    text-align: center;
+  }
+  
+  /* Chart Title */
+  .chart-title {
+    font-size: 1.2rem;
+    margin-bottom: 15px;
+    color: #34495e;
+  }
+  
+  /* Responsive Design */
+  @media (max-width: 768px) {
+    .dashboard-container {
+      padding: 10px;
+    }
+  
+    .chart-title {
+      font-size: 1rem;
+    }
+  
+    .chart-container {
+      padding: 15px;
+    }
   }
   

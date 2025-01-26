@@ -1,34 +1,42 @@
-<div *ngIf="dashboardData">
-    <h2>Dashboard</h2>
+<div *ngIf="dashboardData" class="dashboard-container">
+    <h1 class="dashboard-title">Population Health Dashboard</h1>
   
-    <!-- Gender Distribution Chart -->
-    <div>
-      <canvas id="genderChart"></canvas>
-    </div>
+    <div class="chart-section">
+      <!-- Gender Distribution Chart -->
+      <div class="chart-container">
+        <h3 class="chart-title">Gender Distribution</h3>
+        <canvas id="genderChart"></canvas>
+      </div>
   
-    <!-- Conditions by Category Chart -->
-    <div>
-      <canvas id="conditionsCategoryChart"></canvas>
-    </div>
+      <!-- Conditions by Category Chart -->
+      <div class="chart-container">
+        <h3 class="chart-title">Conditions by Category</h3>
+        <canvas id="conditionsCategoryChart"></canvas>
+      </div>
   
-    <!-- Immunization Coverage Over Time Chart -->
-    <div>
-      <canvas id="immunizationChart"></canvas>
-    </div>
+      <!-- Immunization Coverage Over Time Chart -->
+      <div class="chart-container">
+        <h3 class="chart-title">Immunization Coverage Over Time</h3>
+        <canvas id="immunizationChart"></canvas>
+      </div>
   
-    <!-- Encounter Records Over Time Chart -->
-    <div>
-      <canvas id="encounterChart"></canvas>
-    </div>
+      <!-- Encounter Records Over Time Chart -->
+      <div class="chart-container">
+        <h3 class="chart-title">Encounter Records Over Time</h3>
+        <canvas id="encounterChart"></canvas>
+      </div>
   
-    <!-- Medication Administration Status Distribution -->
-    <div>
-      <canvas id="medicationStatusChart"></canvas>
-    </div>
+      <!-- Medication Administration Status Distribution -->
+      <div class="chart-container">
+        <h3 class="chart-title">Medication Administration Status</h3>
+        <canvas id="medicationStatusChart"></canvas>
+      </div>
   
-    <!-- Top Conditions Chart -->
-    <div>
-      <canvas id="topConditionsChart"></canvas>
+      <!-- Top Conditions Chart -->
+      <div class="chart-container">
+        <h3 class="chart-title">Top Conditions</h3>
+        <canvas id="topConditionsChart"></canvas>
+      </div>
     </div>
   </div>
   
