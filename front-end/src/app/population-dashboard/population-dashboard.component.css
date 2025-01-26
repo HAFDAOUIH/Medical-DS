@@ -1,0 +1,6 @@
+canvas {
+    width: 50% !important; /* Ensures the chart takes up the full width of the container */
+    height: auto !important; /* Sets a fixed height for all charts */
+    align-self: center;
+  }
+  

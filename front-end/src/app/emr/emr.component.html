@@ -15,54 +15,62 @@
       <p><strong>Care Plans:</strong> {{ patient?.careplan_count }}</p>
     </section>
   
-    <!-- Encounters -->
-    <section class="encounters">
-      <h2>Encounters</h2>
-      <table mat-table [dataSource]="encounters" class="mat-elevation-z8">
-        <ng-container matColumnDef="encounter_id">
-          <th mat-header-cell *matHeaderCellDef>Encounter ID</th>
-          <td mat-cell *matCellDef="let encounter">{{ encounter.encounter_id }}</td>
-        </ng-container>
+    <!-- Expansion Panel for Encounters -->
+    <mat-accordion>
+      <mat-expansion-panel>
+        <mat-expansion-panel-header>
+          <mat-panel-title>Encounters</mat-panel-title>
+        </mat-expansion-panel-header>
   
-        <ng-container matColumnDef="start_date">
-          <th mat-header-cell *matHeaderCellDef>Start Date</th>
-          <td mat-cell *matCellDef="let encounter">{{ encounter.start_date }}</td>
-        </ng-container>
+        <table mat-table [dataSource]="encounters" class="mat-elevation-z8">
+          <ng-container matColumnDef="encounter_id">
+            <th mat-header-cell *matHeaderCellDef>Encounter ID</th>
+            <td mat-cell *matCellDef="let encounter">{{ encounter.encounter_id }}</td>
+          </ng-container>
   
-        <ng-container matColumnDef="end_date">
-          <th mat-header-cell *matHeaderCellDef>End Date</th>
-          <td mat-cell *matCellDef="let encounter">{{ encounter.end_date }}</td>
-        </ng-container>
+          <ng-container matColumnDef="start_date">
+            <th mat-header-cell *matHeaderCellDef>Start Date</th>
+            <td mat-cell *matCellDef="let encounter">{{ encounter.start_date }}</td>
+          </ng-container>
   
-        <ng-container matColumnDef="status">
-          <th mat-header-cell *matHeaderCellDef>Status</th>
-          <td mat-cell *matCellDef="let encounter">{{ encounter.status }}</td>
-        </ng-container>
+          <ng-container matColumnDef="end_date">
+            <th mat-header-cell *matHeaderCellDef>End Date</th>
+            <td mat-cell *matCellDef="let encounter">{{ encounter.end_date }}</td>
+          </ng-container>
   
-        <ng-container matColumnDef="actions">
-          <th mat-header-cell *matHeaderCellDef>Actions</th>
-          <td mat-cell *matCellDef="let encounter">
-            <button mat-button (click)="viewEncounterDetails(encounter.encounter_id)">
-              View Details
-            </button>
-          </td>
-        </ng-container>
+          <ng-container matColumnDef="status">
+            <th mat-header-cell *matHeaderCellDef>Status</th>
+            <td mat-cell *matCellDef="let encounter">{{ encounter.status }}</td>
+          </ng-container>
   
-        <tr mat-header-row *matHeaderRowDef="['encounter_id', 'start_date', 'end_date', 'status', 'actions']"></tr>
-        <tr mat-row *matRowDef="let row; columns: ['encounter_id', 'start_date', 'end_date', 'status', 'actions']"></tr>
-      </table>
-    </section>
+          <ng-container matColumnDef="actions">
+            <th mat-header-cell *matHeaderCellDef>Actions</th>
+            <td mat-cell *matCellDef="let encounter">
+              <button mat-button (click)="viewEncounterDetails(encounter.encounter_id)">
+                View Details
+              </button>
+            </td>
+          </ng-container>
   
-    <!-- Encounter Details -->
-    <section class="encounter-details" *ngIf="encounterDetails">
-      <h2>Encounter Details</h2>
-      <p><strong>ID:</strong> {{ encounterDetails?.encounter_id }}</p>
-      <p><strong>Start Date:</strong> {{ encounterDetails?.start_date }}</p>
-      <p><strong>End Date:</strong> {{ encounterDetails?.end_date }}</p>
-      <p><strong>Status:</strong> {{ encounterDetails?.status }}</p>
-      <p><strong>Observations:</strong> {{ encounterDetails?.observation_count }}</p>
-      <p><strong>Medication Requests:</strong> {{ encounterDetails?.request_count }}</p>
-      <p><strong>Procedures:</strong> {{ encounterDetails?.procedure_count }}</p>
-    </section>
+          <tr mat-header-row *matHeaderRowDef="['encounter_id', 'start_date', 'end_date', 'status', 'actions']"></tr>
+          <tr mat-row *matRowDef="let row; columns: ['encounter_id', 'start_date', 'end_date', 'status', 'actions']"></tr>
+        </table>
+      </mat-expansion-panel>
+  
+      <!-- Expansion Panel for Encounter Details -->
+      <mat-expansion-panel *ngIf="encounterDetails">
+        <mat-expansion-panel-header>
+          <mat-panel-title>Encounter Details</mat-panel-title>
+        </mat-expansion-panel-header>
+  
+        <p><strong>ID:</strong> {{ encounterDetails?.encounter_id }}</p>
+        <p><strong>Start Date:</strong> {{ encounterDetails?.start_date }}</p>
+        <p><strong>End Date:</strong> {{ encounterDetails?.end_date }}</p>
+        <p><strong>Status:</strong> {{ encounterDetails?.status }}</p>
+        <p><strong>Observations:</strong> {{ encounterDetails?.observation_count }}</p>
+        <p><strong>Medication Requests:</strong> {{ encounterDetails?.request_count }}</p>
+        <p><strong>Procedures:</strong> {{ encounterDetails?.procedure_count }}</p>
+      </mat-expansion-panel>
+    </mat-accordion>
   </div>
   

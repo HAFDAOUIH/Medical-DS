@@ -26,7 +26,21 @@ export class MedicalRecordService {
   getMySqlUrl(): string {
     return this.mysqlUrl;
   }
+/**
+   * Fetch dashboard data from the backend.
+   * @returns Observable of the dashboard data.
+   */
+getDashboardData(): Observable<any> {
+  if (!this.mysqlUrl) {
+    throw new Error('MySQL URL is not set');
+  }
 
+  const url = `${this.baseUrl}/dashboard`;
+  const params = new HttpParams().set('mysql_url', this.mysqlUrl);
+
+  return this.http.get(url, { params });
+}
+  
   /**
    * Upload files or a folder for ETL processing.
    * @param formData FormData object containing files or folder.

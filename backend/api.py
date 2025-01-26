@@ -154,6 +154,106 @@ def get_patients(cursor):
     cursor.execute(query)
     return cursor.fetchall()
 
+def get_dashboard_data(cursor):
+    dashboard_data = {}
+
+    # Number of Patients by Gender
+    cursor.execute("""
+        SELECT gender, COUNT(*) AS patient_count
+        FROM patient
+        GROUP BY gender;
+    """)
+    dashboard_data['patients_by_gender'] = cursor.fetchall()
+
+    # Number of Conditions by Category
+    cursor.execute("""
+        SELECT code_text, COUNT(*) AS condition_count
+        FROM medical_condition
+        GROUP BY code_text;
+    """)
+    dashboard_data['conditions_by_category'] = cursor.fetchall()
+
+    # Immunization Coverage Over Time
+    cursor.execute("""
+        SELECT 
+            YEAR(occurrence_date) AS year,
+            MONTH(occurrence_date) AS month,
+            COUNT(DISTINCT patient_reference) AS immunization_count
+        FROM immunization
+        WHERE status = 'completed'
+        GROUP BY YEAR(occurrence_date), MONTH(occurrence_date)
+        ORDER BY year, month;
+    """)
+    dashboard_data['immunization_over_time'] = cursor.fetchall()
+
+    # Number of Encounter Records Over Time
+    cursor.execute("""
+        SELECT 
+            YEAR(start_date) AS year,
+            MONTH(start_date) AS month,
+            COUNT(*) AS encounter_count
+        FROM encounter
+        GROUP BY YEAR(start_date), MONTH(start_date)
+        ORDER BY year, month;
+    """)
+    dashboard_data['encounters_over_time'] = cursor.fetchall()
+
+    # Medication Administration Status Distribution
+    cursor.execute("""
+        SELECT status, COUNT(*) AS medication_count
+        FROM medicationadministration
+        GROUP BY status;
+    """)
+    dashboard_data['medication_status_distribution'] = cursor.fetchall()
+
+    # Prevalence of Conditions by Code (Top 5)
+    cursor.execute("""
+        SELECT code_text, COUNT(DISTINCT patient_reference) AS condition_count
+        FROM medical_condition
+        GROUP BY code_text
+        ORDER BY condition_count DESC
+        LIMIT 5;
+    """)
+    dashboard_data['top_conditions'] = cursor.fetchall()
+
+    return dashboard_data
+
+
+@app.route('/dashboard', methods=['GET'])
+def get_dashboard():
+    mysql_url = request.args.get('mysql_url')
+    if not mysql_url:
+        return jsonify({"error": "MySQL URL must be provided as a query parameter."}), 400
+
+    connection = None
+    try:
+        url_parts = mysql_url.split('@')
+        user_pass = url_parts[0].split('//')[1]
+        user = user_pass.split(':')[0]
+        db = url_parts[1].split('/')[-1]
+
+        # Connect to the database
+        connection = pymysql.connect(
+            host='127.0.0.1',
+            user=user,
+            password='',
+            database=db,
+            cursorclass=pymysql.cursors.DictCursor
+        )
+
+        with connection.cursor() as cursor:
+            # Retrieve dashboard data
+            dashboard_data = get_dashboard_data(cursor)
+
+        return jsonify(dashboard_data), 200
+
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
+
+    finally:
+        if connection:
+            connection.close()
+
 @app.route('/patients',methods=['GET'])
 def getAllPatients():
     mysql_url = request.args.get('mysql_url')

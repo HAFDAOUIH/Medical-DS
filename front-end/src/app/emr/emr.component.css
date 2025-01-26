@@ -1,0 +1,32 @@
+.patient-details-container {
+    padding: 20px;
+    font-family: Arial, sans-serif;
+  }
+  
+  .patient-info, .encounters, .encounter-details {
+    margin-bottom: 30px;
+  }
+  
+  .patient-info h2, .encounters h2, .encounter-details h2 {
+    margin-bottom: 15px;
+  }
+  
+  table {
+    width: 100%;
+  }
+  
+  .mat-elevation-z8 {
+    margin-top: 20px;
+    border-radius: 8px;
+    overflow: hidden;
+  }
+  
+  th, td {
+    padding: 10px;
+    text-align: left;
+  }
+  
+  .actions button {
+    margin-right: 10px;
+  }
+  
