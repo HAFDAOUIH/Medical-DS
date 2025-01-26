@@ -157,39 +157,67 @@ def get_patients(cursor):
 def get_dashboard_data(cursor):
     dashboard_data = {}
 
-    # Immunization Coverage Rate
+    # Number of Patients by Gender
     cursor.execute("""
-        SELECT 
-            ROUND(
-                (COUNT(DISTINCT patient_reference) * 100.0) / 
-                (SELECT COUNT(*) FROM patient), 2
-            ) AS immunization_rate
-        FROM 
-            immunization
-        WHERE 
-            status = 'completed';
+        SELECT gender, COUNT(*) AS patient_count
+        FROM patient
+        GROUP BY gender;
     """)
-    dashboard_data['immunization_rate'] = cursor.fetchone()['immunization_rate']
+    dashboard_data['patients_by_gender'] = cursor.fetchall()
 
-    # Count of Each `code_text` and Its Prevalence
+    # Number of Conditions by Category
+    cursor.execute("""
+        SELECT code_text, COUNT(*) AS condition_count
+        FROM medical_condition
+        GROUP BY code_text;
+    """)
+    dashboard_data['conditions_by_category'] = cursor.fetchall()
+
+    # Immunization Coverage Over Time
     cursor.execute("""
         SELECT 
-            code_text,
-            COUNT(DISTINCT patient_reference) AS condition_count,
-            ROUND(
-                (COUNT(DISTINCT patient_reference) * 100.0) / 
-                (SELECT COUNT(*) FROM patient), 2
-            ) AS prevalence_percentage
-        FROM 
-            medical_condition
-        GROUP BY 
-            code_text
-        ORDER BY 
-            condition_count DESC;
+            YEAR(occurrence_date) AS year,
+            MONTH(occurrence_date) AS month,
+            COUNT(DISTINCT patient_reference) AS immunization_count
+        FROM immunization
+        WHERE status = 'completed'
+        GROUP BY YEAR(occurrence_date), MONTH(occurrence_date)
+        ORDER BY year, month;
     """)
-    dashboard_data['conditions_prevalence'] = cursor.fetchall()
+    dashboard_data['immunization_over_time'] = cursor.fetchall()
+
+    # Number of Encounter Records Over Time
+    cursor.execute("""
+        SELECT 
+            YEAR(start_date) AS year,
+            MONTH(start_date) AS month,
+            COUNT(*) AS encounter_count
+        FROM encounter
+        GROUP BY YEAR(start_date), MONTH(start_date)
+        ORDER BY year, month;
+    """)
+    dashboard_data['encounters_over_time'] = cursor.fetchall()
+
+    # Medication Administration Status Distribution
+    cursor.execute("""
+        SELECT status, COUNT(*) AS medication_count
+        FROM medicationadministration
+        GROUP BY status;
+    """)
+    dashboard_data['medication_status_distribution'] = cursor.fetchall()
+
+    # Prevalence of Conditions by Code (Top 5)
+    cursor.execute("""
+        SELECT code_text, COUNT(DISTINCT patient_reference) AS condition_count
+        FROM medical_condition
+        GROUP BY code_text
+        ORDER BY condition_count DESC
+        LIMIT 5;
+    """)
+    dashboard_data['top_conditions'] = cursor.fetchall()
 
     return dashboard_data
+
 
 @app.route('/dashboard', methods=['GET'])
 def get_dashboard():

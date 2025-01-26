@@ -1,35 +1,34 @@
-<div class="dashboard-container">
-    <h2>Healthcare Dashboard</h2>
+<div *ngIf="dashboardData">
+    <h2>Dashboard</h2>
   
-    <div *ngIf="errorMessage" class="error">
-      <p>{{ errorMessage }}</p>
+    <!-- Gender Distribution Chart -->
+    <div>
+      <canvas id="genderChart"></canvas>
     </div>
   
-    <div *ngIf="dashboardData">
-      <div class="immunization-rate">
-        <h3>Immunization Coverage Rate</h3>
-        <p>{{ dashboardData.immunization_rate }}%</p>
-      </div>
+    <!-- Conditions by Category Chart -->
+    <div>
+      <canvas id="conditionsCategoryChart"></canvas>
+    </div>
   
-      <div class="conditions-prevalence">
-        <h3>Conditions Prevalence</h3>
-        <table>
-          <thead>
-            <tr>
-              <th>Condition</th>
-              <th>Count</th>
-              <th>Prevalence (%)</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr *ngFor="let condition of dashboardData.conditions_prevalence">
-              <td>{{ condition.code_text }}</td>
-              <td>{{ condition.condition_count }}</td>
-              <td>{{ condition.prevalence_percentage }}%</td>
-            </tr>
-          </tbody>
-        </table>
-      </div>
+    <!-- Immunization Coverage Over Time Chart -->
+    <div>
+      <canvas id="immunizationChart"></canvas>
+    </div>
+  
+    <!-- Encounter Records Over Time Chart -->
+    <div>
+      <canvas id="encounterChart"></canvas>
+    </div>
+  
+    <!-- Medication Administration Status Distribution -->
+    <div>
+      <canvas id="medicationStatusChart"></canvas>
+    </div>
+  
+    <!-- Top Conditions Chart -->
+    <div>
+      <canvas id="topConditionsChart"></canvas>
     </div>
   </div>
   
