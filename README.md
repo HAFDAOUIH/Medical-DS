@@ -61,21 +61,25 @@ The project includes a web-based UI built using **Flask** and frontend technolog
 
 ### Setup  
 
-1. **Clone the Repository**:  
+1. **Clone the Repository**:
+   
    ```bash
-   git clone https://github.com/HAFDAOUIH/Medical-DS.git  
-   cd Medical-DS  
+   git clone https://github.com/drisskhattabi6/Data-Space-for-Electronic-Medical-Records.git 
+   cd Data-Space-for-Electronic-Medical-Records
    ```  
 
-2. **Set Up MySQL**:  
-   - Start MySQL:  
-     ```bash
-     sudo systemctl start mysql  
-     ```  
-   - Create a database:  
-     ```sql
-     CREATE DATABASE fhir_data;  
-     ```  
+2. **Set Up MySQL**: Create DataBase **healthcare_db** :
+
+   - Windows : Use **XAMPP Control Panel**
+   - Linux :
+      - Start MySQL:  
+        ```bash
+        sudo systemctl start mysql  
+        ```  
+      - Create a database:  
+        ```sql
+        CREATE DATABASE healthcare_db;  
+        ```  
 
 3. **Prepare FHIR Data**:  
    Place your FHIR JSON files into a folder (e.g., `fhir/`).  
@@ -89,7 +93,7 @@ The project includes a web-based UI built using **Flask** and frontend technolog
 Execute the ETL script to process data and load it into the database:  
 ```bash
 python3 healthcare_etl.py --input_dir fhir \
-  --mysql_url "mysql+pymysql://username:password@localhost:3306/fhir_data"
+  --mysql_url "mysql+pymysql://username:password@localhost:3306/healthcare_db"
 ```  
 
 ### 2. Start the REST API  
@@ -101,13 +105,18 @@ python3 backend/api.py
 
 ### 3. Start the User Interface  
 
+npm and angular must be install :
+```bash
+npm install -g @angular/cli
+```  
+
 Navigate to the `frontend` folder and start the UI:  
 ```bash
 cd frontend  
 ng serve
 ```  
 
-The UI will be available at **`http://127.0.0.1:5000`**.  
+The UI will be available at **`http://localhost:4200/`**.  
 
 ---
 
