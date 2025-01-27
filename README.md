@@ -68,9 +68,9 @@ The project includes a web-based UI built using **Flask** and frontend technolog
    cd Data-Space-for-Electronic-Medical-Records
    ```  
 
-2. **Set Up MySQL**: Create DataBase **healthcare_db** :
+2. **Set Up MySQL**: Create **healthcare_db** Database :
 
-   - Windows : Use **XAMPP Control Panel**
+   - Windows : Use **XAMPP Control Panel**, in MySQL Dashboard (PHPMyAdmin), and create **healthcare_db**.
    - Linux :
       - Start MySQL:  
         ```bash
@@ -92,15 +92,14 @@ The project includes a web-based UI built using **Flask** and frontend technolog
 
 Execute the ETL script to process data and load it into the database:  
 ```bash
-python3 healthcare_etl.py --input_dir fhir \
-  --mysql_url "mysql+pymysql://username:password@localhost:3306/healthcare_db"
+python3 healthcare_etl.py --input_dir fhir --mysql_url "mysql+pymysql://username:password@localhost:3306/healthcare_db"
 ```  
 
 ### 2. Start the REST API  
 
 Run the API server:  
 ```bash
-python3 backend/api.py  
+python backend/api.py  
 ```  
 
 ### 3. Start the User Interface  
