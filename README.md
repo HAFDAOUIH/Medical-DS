@@ -4,6 +4,8 @@
 
 The **Medical Data Space Project** provides a comprehensive platform for managing, processing, and exploring healthcare data. It integrates **FHIR (Fast Healthcare Interoperability Resources)** standards with a robust backend and an interactive user interface (UI) for seamless data access and visualization. The project is ideal for medical data integration, exploration, and research.  
 
+-> Read report (in french) for more details.
+
 ### Key Features  
 
 - **ETL Pipeline**: Extract, transform, and load FHIR JSON data into a structured MySQL database.  
@@ -11,6 +13,10 @@ The **Medical Data Space Project** provides a comprehensive platform for managin
 - **Interactive UI**: A user-friendly interface to explore and interact with healthcare data.  
 - **Data Validation**: Ensures accuracy and completeness of processed data.  
 - **Scalable Data Space**: Flexible architecture for large healthcare datasets.  
+
+App Design :
+
+![app Design](imgs/img0.png)
 
 ---
 
@@ -107,12 +113,21 @@ The UI will be available at **`http://127.0.0.1:5000`**.
 
 ## UI Features  
 
-1. **Patient Management**:  
-   Search for patients by name or ID and view their medical history.  
+1. **Upload Data**:
+   user can upload data (FHIR Format)
+   
+   ![](imgs/img1.png)
 
-2. **Data Visualization**:  
+3. **Patient Management**:  
+   Search for patients by name or ID and view their medical history.
+
+   ![](imgs/img3.png)
+   ![](imgs/img2.png)
+
+5. **Data Visualization**:  
    Visualize patient observations, conditions, immunizations, and encounters using charts and tables.  
-  
+
+  ![](imgs/img4.png)
 
 ---
 
@@ -128,3 +143,17 @@ The UI will be available at **`http://127.0.0.1:5000`**.
    Optimize MySQL configurations or use external storage for large data.  
 
 This project creates a unified data space for healthcare professionals, researchers, and developers, enabling efficient data exploration, validation, and analysis.  
+
+---
+
+## Team :
+
+- **Hamza Hafdaoui**
+- **Chihab Eddine LIEFRID**
+- **KHATTABI IDRISS**
+- **Salma amgarou**
+- **BOUFARHI AYMAN**
+
+Module : DATA SPACES & DATA INTEGRATION & SEMANTIC INTEROPERABILITY
+
+Supervisor : **Mrs. Ouafae Baida**
